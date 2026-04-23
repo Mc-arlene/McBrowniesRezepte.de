@@ -489,6 +489,7 @@ footer p {
     height: 100%;
     background-color: rgba(0,0,0,0.5);
     animation: fadeIn 0.3s;
+    overflow-y: auto;
 }
 
 @keyframes fadeIn {
@@ -505,6 +506,7 @@ footer p {
     max-width: 600px;
     box-shadow: 0 5px 20px rgba(0,0,0,0.3);
     animation: slideIn 0.3s;
+    position: relative;
 }
 
 @keyframes slideIn {
@@ -876,4 +878,433 @@ body::before {
 .container, header, footer {
     position: relative;
     z-index: 1;
+}
+
+/* Recipe View Modal */
+.recipe-view-content {
+    max-width: 600px;
+}
+
+.recipe-view-image {
+    text-align: center;
+    font-size: 5em;
+    margin: 10px 0 5px;
+    line-height: 1;
+}
+
+.recipe-view-image img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 12px;
+    object-fit: cover;
+}
+
+#recipeViewTitle {
+    text-align: center;
+    color: #E91E8C;
+    font-family: 'Dancing Script', cursive;
+    font-size: 2em;
+    margin-bottom: 16px;
+}
+
+.recipe-view-meta {
+    text-align: center;
+    background: #fce4f3;
+    border-radius: 20px;
+    padding: 6px 18px;
+    display: inline-block;
+    margin: 0 auto 14px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.85em;
+    color: #a0006a;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.recipe-view-section {
+    margin: 14px 0;
+    padding: 14px 16px;
+    background: #fff5fa;
+    border-radius: 10px;
+    border-left: 4px solid #E91E8C;
+}
+
+.recipe-view-section h3 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.5em;
+    color: #E91E8C;
+    margin-bottom: 8px;
+}
+
+.ingredients-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.ingredients-list li {
+    padding: 5px 0;
+    border-bottom: 1px solid #ffd6ec;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.88em;
+}
+
+.ingredients-list li:last-child {
+    border-bottom: none;
+}
+
+.prep-steps {
+    padding-left: 22px;
+    margin: 0;
+}
+
+.prep-steps li {
+    padding: 6px 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.88em;
+    line-height: 1.5;
+    border-bottom: 1px solid #ffd6ec;
+}
+
+.prep-steps li:last-child {
+    border-bottom: none;
+}
+
+.nutrition-text {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.88em;
+    line-height: 1.7;
+    margin: 0;
+}
+
+.no-recipe-info {
+    color: #aaa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-style: italic;
+    font-size: 0.88em;
+    margin: 0;
+}
+
+/* Rezept-Löschen-Button */
+.recipe-delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255,255,255,0.85);
+    border: none;
+    border-radius: 50%;
+    width: 34px;
+    height: 34px;
+    font-size: 1em;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s, background-color 0.2s;
+    z-index: 10;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.recipe-card {
+    position: relative;
+}
+
+.recipe-card:hover .recipe-delete-btn {
+    opacity: 1;
+}
+
+.recipe-delete-btn:hover {
+    background-color: #E91E8C;
+    color: white;
+}
+
+/* Auf Mobilgeräten immer sichtbar (kein Hover) */
+@media (hover: none) {
+    .recipe-delete-btn {
+        opacity: 1;
+    }
+}
+
+/* Camera UI */
+#cameraPreview,
+#cameraCanvas {
+    width: 100%;
+    border-radius: 10px;
+    display: block;
+    background: #000;
+    max-height: 300px;
+    object-fit: cover;
+}
+
+.camera-btn-row {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.camera-retake-btn {
+    background: #888 !important;
+}
+
+.camera-confirm-btn {
+    background: #4CAF50 !important;
+}
+
+.camera-confirmed-msg {
+    margin-top: 10px;
+    color: #4CAF50;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.88em;
+    font-weight: bold;
+}
+
+/* ===================== Responsive Design ===================== */
+
+/* Verhindert horizontales Überlaufen auf allen Geräten */
+html, body {
+    overflow-x: hidden;
+    max-width: 100%;
+}
+
+/* Tablet (≤900px) */
+@media (max-width: 900px) {
+    .recipes {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    header h1 {
+        font-size: 3.5em;
+    }
+
+    .hero {
+        padding: 40px 24px;
+    }
+}
+
+/* Mobil (≤600px) */
+@media (max-width: 600px) {
+    body {
+        font-size: 1em;
+    }
+
+    header {
+        padding: 40px 16px 32px;
+    }
+
+    header h1 {
+        font-size: 2.6em;
+    }
+
+    header p {
+        font-size: 0.95em;
+    }
+
+    /* Navigation: horizontal scrollbar statt stapeln */
+    nav ul {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0 8px;
+        scrollbar-width: none;
+    }
+
+    nav ul::-webkit-scrollbar {
+        display: none;
+    }
+
+    nav li {
+        flex-shrink: 0;
+    }
+
+    nav a {
+        padding: 10px 14px;
+        white-space: nowrap;
+        font-size: 0.9em;
+    }
+
+    .container {
+        padding: 0 12px;
+    }
+
+    .hero {
+        padding: 28px 14px;
+        margin: 12px 0;
+        border-radius: 10px;
+    }
+
+    .hero h2 {
+        font-size: 1.5em;
+        margin-bottom: 12px;
+    }
+
+    .hero p {
+        font-size: 0.9em;
+        margin-bottom: 20px;
+    }
+
+    .recipes {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        margin: 20px 0;
+    }
+
+    .recipe-card-image {
+        height: 150px;
+        font-size: 3.5em;
+    }
+
+    .recipe-card-content {
+        padding: 14px;
+    }
+
+    /* Buttons: gut tippbar */
+    .btn {
+        padding: 12px 22px;
+        font-size: 0.95em;
+        min-height: 44px;
+    }
+
+    /* Reaktions-Buttons: gut tippbar */
+    .reaction-btn {
+        padding: 8px 10px;
+        font-size: 1.1em;
+        min-height: 40px;
+    }
+
+    .reactions {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    /* Suchleiste */
+    .search-bar-section {
+        padding: 10px 12px;
+    }
+
+    .search-wrapper {
+        width: 100%;
+        padding: 8px 14px;
+    }
+
+    .search-input {
+        font-size: 1em;
+    }
+
+    /* Modal: fast vollflächig */
+    .modal-content {
+        width: 98%;
+        margin: 2% auto 4%;
+        padding: 16px 14px;
+        border-radius: 12px;
+    }
+
+    /* iOS-Fix: verhindert automatisches Hereinzoomen bei Formulareingaben */
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea,
+    .comment-input,
+    .search-input {
+        font-size: 16px;
+    }
+
+    .form-group textarea {
+        min-height: 80px;
+    }
+
+    /* Foto-Auswahl: jede Option volle Breite */
+    .photo-type-options {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .photo-type-label {
+        width: 100%;
+        justify-content: flex-start;
+        padding: 10px 14px;
+        font-size: 0.95em;
+    }
+
+    /* Emoji-Grid: weniger Spalten auf kleinen Bildschirmen */
+    .emoji-grid {
+        grid-template-columns: repeat(6, 1fr);
+    }
+
+    /* Kamera */
+    #cameraPreview,
+    #cameraCanvas {
+        max-height: 240px;
+    }
+
+    .camera-btn-row {
+        flex-wrap: wrap;
+    }
+
+    .camera-btn-row .btn {
+        flex: 1;
+        text-align: center;
+    }
+
+    /* Modal-Buttons: volle Breite */
+    .modal-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .modal-buttons button {
+        width: 100%;
+        padding: 13px;
+        font-size: 1em;
+    }
+
+    /* Kommentare */
+    .comment-submit-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 0.95em;
+        min-height: 42px;
+    }
+
+    /* Abschnittsüberschriften */
+    .meal-section > h2 {
+        font-size: 1.4em;
+        margin: 24px 0 16px !important;
+    }
+
+    footer {
+        padding: 24px 16px;
+        font-size: 0.88em;
+        margin-top: 30px;
+    }
+
+    /* Rezept-Detailansicht */
+    .recipe-view-image {
+        font-size: 4em;
+    }
+
+    #recipeViewTitle {
+        font-size: 1.6em;
+    }
+}
+
+/* Sehr kleine Bildschirme (≤380px) */
+@media (max-width: 380px) {
+    header h1 {
+        font-size: 2em;
+    }
+
+    .hero h2 {
+        font-size: 1.3em;
+    }
+
+    .recipe-card-image {
+        height: 120px;
+        font-size: 3em;
+    }
+
+    .emoji-grid {
+        grid-template-columns: repeat(5, 1fr);
+    }
 }
