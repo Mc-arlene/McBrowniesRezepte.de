@@ -348,10 +348,32 @@
 
         .comment {
             background-color: #f8f9fa;
-            padding: 10px;
+            padding: 10px 36px 10px 10px;
             border-radius: 8px;
             margin-bottom: 8px;
             font-size: 0.9em;
+            position: relative;
+        }
+
+        .comment-delete-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: none;
+            border: none;
+            color: #ccc;
+            font-size: 1em;
+            cursor: pointer;
+            line-height: 1;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            transition: color 0.2s, background-color 0.2s;
+        }
+
+        .comment-delete-btn:hover {
+            color: white;
+            background-color: #E91E8C;
         }
 
         .comment-author {
@@ -1298,6 +1320,43 @@
             });
         });
 
+        // Erstellt ein einzelnes Kommentar-Element mit Löschen-Button
+        function createCommentElement(recipe, comment, index) {
+            const div = document.createElement('div');
+            div.className = 'comment';
+            div.innerHTML = `
+                <button class="comment-delete-btn" title="Kommentar löschen">✕</button>
+                <div class="comment-author">Anonymer User</div>
+                <div class="comment-text">${comment.text}</div>
+                <div class="comment-date">${comment.date}</div>
+            `;
+            div.querySelector('.comment-delete-btn').addEventListener('click', function() {
+                deleteComment(recipe, index);
+            });
+            return div;
+        }
+
+        // Rendert alle Kommentare eines Rezepts neu
+        function renderComments(recipe) {
+            const commentData = JSON.parse(localStorage.getItem('recipeComments')) || {};
+            const commentsSection = document.querySelector(`.comments-section[data-recipe="${recipe}"]`);
+            if (!commentsSection) return;
+            commentsSection.innerHTML = '';
+            (commentData[recipe] || []).forEach(function(comment, index) {
+                commentsSection.appendChild(createCommentElement(recipe, comment, index));
+            });
+        }
+
+        // Löscht einen Kommentar und rendert die Liste neu
+        function deleteComment(recipe, index) {
+            const commentData = JSON.parse(localStorage.getItem('recipeComments')) || {};
+            if (commentData[recipe]) {
+                commentData[recipe].splice(index, 1);
+                localStorage.setItem('recipeComments', JSON.stringify(commentData));
+                renderComments(recipe);
+            }
+        }
+
         // Load comments and reactions from localStorage
         function loadCommentsAndReactions() {
             const savedData = JSON.parse(localStorage.getItem('recipeComments')) || {};
@@ -1305,20 +1364,7 @@
 
             // Load comments
             for (const recipe in savedData) {
-                const commentsSection = document.querySelector(`.comments-section[data-recipe="${recipe}"]`);
-                if (commentsSection) {
-                    commentsSection.innerHTML = '';
-                    savedData[recipe].forEach(comment => {
-                        const commentDiv = document.createElement('div');
-                        commentDiv.className = 'comment';
-                        commentDiv.innerHTML = `
-                            <div class="comment-author">Anonymer User</div>
-                            <div class="comment-text">${comment.text}</div>
-                            <div class="comment-date">${comment.date}</div>
-                        `;
-                        commentsSection.appendChild(commentDiv);
-                    });
-                }
+                renderComments(recipe);
             }
 
             const userReactions = JSON.parse(localStorage.getItem('userReactions_v2')) || {};
@@ -1368,27 +1414,13 @@
         // Add a comment
         function addComment(recipe, text) {
             const commentData = JSON.parse(localStorage.getItem('recipeComments')) || {};
-            
             if (!commentData[recipe]) commentData[recipe] = [];
-            
-            const newComment = {
+            commentData[recipe].push({
                 text: text,
                 date: new Date().toLocaleString('de-DE')
-            };
-            
-            commentData[recipe].push(newComment);
+            });
             localStorage.setItem('recipeComments', JSON.stringify(commentData));
-            
-            // Add to display
-            const commentsSection = document.querySelector(`.comments-section[data-recipe="${recipe}"]`);
-            const commentDiv = document.createElement('div');
-            commentDiv.className = 'comment';
-            commentDiv.innerHTML = `
-                <div class="comment-author">Anonymer User</div>
-                <div class="comment-text">${text}</div>
-                <div class="comment-date">${newComment.date}</div>
-            `;
-            commentsSection.appendChild(commentDiv);
+            renderComments(recipe);
         }
 
     </script>
