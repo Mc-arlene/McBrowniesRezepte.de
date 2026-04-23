@@ -1081,37 +1081,29 @@ html, body {
 @media (max-width: 900px) {
     .recipes {
         grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
+        gap: 16px;
     }
-
-    header h1 {
-        font-size: 3.5em;
-    }
-
-    .hero {
-        padding: 40px 24px;
-    }
+    header h1  { font-size: 3em; }
+    .hero      { padding: 36px 20px; }
 }
 
-/* Mobil (≤600px) */
+/* Mobil (≤600px) — feste px-Werte, um die 1.35em-Basis zu brechen */
 @media (max-width: 600px) {
     body {
-        font-size: 1em;
+        font-size: 14px;
     }
 
     header {
-        padding: 40px 16px 32px;
+        padding: 22px 14px 18px;
     }
-
     header h1 {
-        font-size: 2.6em;
+        font-size: 26px;
+        margin-bottom: 8px;
     }
+    header p  { font-size: 13px; }
 
-    header p {
-        font-size: 0.95em;
-    }
-
-    /* Navigation: horizontal scrollbar statt stapeln */
+    /* Navigation: horizontal scrollbar */
+    nav       { padding: 8px 0; }
     nav ul {
         flex-wrap: nowrap;
         justify-content: flex-start;
@@ -1120,201 +1112,89 @@ html, body {
         padding: 0 8px;
         scrollbar-width: none;
     }
+    nav ul::-webkit-scrollbar { display: none; }
+    nav li  { flex-shrink: 0; }
+    nav a   { padding: 8px 12px; white-space: nowrap; font-size: 13px; }
 
-    nav ul::-webkit-scrollbar {
-        display: none;
-    }
-
-    nav li {
-        flex-shrink: 0;
-    }
-
-    nav a {
-        padding: 10px 14px;
-        white-space: nowrap;
-        font-size: 0.9em;
-    }
-
-    .container {
-        padding: 0 12px;
-    }
+    .container { padding: 0 10px; }
 
     .hero {
-        padding: 28px 14px;
-        margin: 12px 0;
-        border-radius: 10px;
+        padding: 20px 12px;
+        margin: 10px 0;
+        border-radius: 8px;
     }
+    .hero h2  { font-size: 18px; margin-bottom: 8px; }
+    .hero p   { font-size: 13px; margin-bottom: 16px; }
 
-    .hero h2 {
-        font-size: 1.5em;
-        margin-bottom: 12px;
-    }
-
-    .hero p {
-        font-size: 0.9em;
-        margin-bottom: 20px;
-    }
-
-    .recipes {
-        grid-template-columns: 1fr;
-        gap: 16px;
-        margin: 20px 0;
-    }
-
-    .recipe-card-image {
-        height: 150px;
-        font-size: 3.5em;
-    }
-
-    .recipe-card-content {
-        padding: 14px;
-    }
-
-    /* Buttons: gut tippbar */
     .btn {
-        padding: 12px 22px;
-        font-size: 0.95em;
-        min-height: 44px;
-    }
-
-    /* Reaktions-Buttons: gut tippbar */
-    .reaction-btn {
-        padding: 8px 10px;
-        font-size: 1.1em;
-        min-height: 40px;
-    }
-
-    .reactions {
-        flex-wrap: wrap;
-        gap: 6px;
-    }
-
-    /* Suchleiste */
-    .search-bar-section {
-        padding: 10px 12px;
-    }
-
-    .search-wrapper {
-        width: 100%;
-        padding: 8px 14px;
-    }
-
-    .search-input {
-        font-size: 1em;
-    }
-
-    /* Modal: fast vollflächig */
-    .modal-content {
-        width: 98%;
-        margin: 2% auto 4%;
-        padding: 16px 14px;
-        border-radius: 12px;
-    }
-
-    /* iOS-Fix: verhindert automatisches Hereinzoomen bei Formulareingaben */
-    .form-group input[type="text"],
-    .form-group input[type="number"],
-    .form-group textarea,
-    .comment-input,
-    .search-input {
-        font-size: 16px;
-    }
-
-    .form-group textarea {
-        min-height: 80px;
-    }
-
-    /* Foto-Auswahl: jede Option volle Breite */
-    .photo-type-options {
-        flex-direction: column;
-        gap: 6px;
-    }
-
-    .photo-type-label {
-        width: 100%;
-        justify-content: flex-start;
-        padding: 10px 14px;
-        font-size: 0.95em;
-    }
-
-    /* Emoji-Grid: weniger Spalten auf kleinen Bildschirmen */
-    .emoji-grid {
-        grid-template-columns: repeat(6, 1fr);
-    }
-
-    /* Kamera */
-    #cameraPreview,
-    #cameraCanvas {
-        max-height: 240px;
-    }
-
-    .camera-btn-row {
-        flex-wrap: wrap;
-    }
-
-    .camera-btn-row .btn {
-        flex: 1;
-        text-align: center;
-    }
-
-    /* Modal-Buttons: volle Breite */
-    .modal-buttons {
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .modal-buttons button {
-        width: 100%;
-        padding: 13px;
-        font-size: 1em;
-    }
-
-    /* Kommentare */
-    .comment-submit-btn {
-        width: 100%;
-        padding: 10px;
-        font-size: 0.95em;
+        padding: 10px 18px;
+        font-size: 13px;
         min-height: 42px;
     }
 
-    /* Abschnittsüberschriften */
-    .meal-section > h2 {
-        font-size: 1.4em;
-        margin: 24px 0 16px !important;
+    .search-bar-section { padding: 8px 10px; }
+    .search-wrapper     { padding: 7px 12px; }
+    .search-input       { font-size: 16px; }
+
+    .meal-section > h2  { font-size: 17px !important; margin: 20px 0 12px !important; }
+
+    .recipes {
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin: 16px 0;
     }
 
-    footer {
-        padding: 24px 16px;
-        font-size: 0.88em;
-        margin-top: 30px;
-    }
+    .recipe-card-image  { height: 110px; font-size: 2.8em; }
+    .recipe-card-content { padding: 12px; }
+    .recipe-card h3     { font-size: 15px; margin-bottom: 6px; }
+    .recipe-card p      { font-size: 12px; margin-bottom: 10px; }
 
-    /* Rezept-Detailansicht */
-    .recipe-view-image {
-        font-size: 4em;
-    }
+    .reaction-btn       { padding: 6px 8px; font-size: 14px; }
+    .reactions          { flex-wrap: wrap; gap: 5px; }
 
-    #recipeViewTitle {
-        font-size: 1.6em;
+    .comment-input      { font-size: 16px; min-height: 60px; }
+    .comment-submit-btn { width: 100%; padding: 9px; font-size: 13px; }
+
+    /* Modal */
+    .modal-content {
+        width: 98%;
+        margin: 2% auto 4%;
+        padding: 14px 12px;
+        border-radius: 10px;
     }
+    .modal h2           { font-size: 18px; }
+
+    /* iOS-Fix: kein automatisches Hereinzoomen */
+    .form-group input[type="text"],
+    .form-group input[type="number"],
+    .form-group textarea { font-size: 16px; }
+    .form-group textarea { min-height: 70px; }
+    .form-group label    { font-size: 13px; }
+
+    .photo-type-options  { flex-direction: column; gap: 5px; }
+    .photo-type-label    { padding: 9px 12px; font-size: 13px; }
+    .emoji-grid          { grid-template-columns: repeat(6, 1fr); }
+
+    #cameraPreview,
+    #cameraCanvas        { max-height: 200px; }
+    .camera-btn-row      { flex-wrap: wrap; }
+    .camera-btn-row .btn { flex: 1; }
+
+    .modal-buttons       { flex-direction: column; gap: 7px; }
+    .modal-buttons button { width: 100%; padding: 11px; font-size: 14px; }
+
+    footer { padding: 18px 14px; font-size: 12px; margin-top: 24px; }
+
+    .recipe-view-image  { font-size: 3.5em; }
+    #recipeViewTitle    { font-size: 20px; }
+    .recipe-view-section { padding: 10px 12px; }
+    .recipe-view-section h3 { font-size: 16px; }
 }
 
 /* Sehr kleine Bildschirme (≤380px) */
 @media (max-width: 380px) {
-    header h1 {
-        font-size: 2em;
-    }
-
-    .hero h2 {
-        font-size: 1.3em;
-    }
-
-    .recipe-card-image {
-        height: 120px;
-        font-size: 3em;
-    }
-
-    .emoji-grid {
-        grid-template-columns: repeat(5, 1fr);
-    }
+    header h1            { font-size: 22px; }
+    .hero h2             { font-size: 16px; }
+    .recipe-card-image   { height: 90px; font-size: 2.4em; }
+    .emoji-grid          { grid-template-columns: repeat(5, 1fr); }
 }
