@@ -1,3 +1,23 @@
+// Firebase
+const firebaseConfig = {
+    apiKey:            "AIzaSyAUOvGmpcYpCxXu_ND9ivfUpcUOZNrPMAM",
+    authDomain:        "mcbrowniesrezepte.firebaseapp.com",
+    databaseURL:       "https://mcbrowniesrezepte-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId:         "mcbrowniesrezepte",
+    storageBucket:     "mcbrowniesrezepte.firebasestorage.app",
+    messagingSenderId: "303530338836",
+    appId:             "1:303530338836:web:0a4c25ef642a20279c9501"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// Lokaler Cache – wird beim Start aus Firebase befüllt
+window.recipesCache = {};
+
+function toFirebaseKey(name) {
+    return name.replace(/[.#$[\]/]/g, '_');
+}
+
 let cameraStream = null;
 window.capturedCameraPhoto = null;
 
