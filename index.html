@@ -257,6 +257,12 @@
             overflow: hidden;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recipe-card .recipe-card-content {
+            flex: 1;
         }
 
         .recipe-card:hover {
@@ -274,6 +280,13 @@
 
         .recipe-card-content {
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recipe-card-content .btn {
+            align-self: flex-start;
+            margin-top: auto;
         }
 
         .recipe-card h3 {
