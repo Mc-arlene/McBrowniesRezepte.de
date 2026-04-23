@@ -762,15 +762,16 @@ function loadSavedRecipes() {
 }
 
 function deleteRecipe(recipeName) {
-    const saved = JSON.parse(localStorage.getItem('recipes')) || {};
-    delete saved[recipeName];
-    localStorage.setItem('recipes', JSON.stringify(saved));
+    db.ref('recipes/' + toFirebaseKey(recipeName)).remove();
+    delete window.recipesCache[recipeName];
+    // Auch aus localStorage entfernen (Fallback-Backup)
+    const local = JSON.parse(localStorage.getItem('recipes')) || {};
+    delete local[recipeName];
+    localStorage.setItem('recipes', JSON.stringify(local));
 
     document.querySelectorAll('.recipe-card:not(.add-recipe-card)').forEach(function(card) {
         const h3 = card.querySelector('h3');
-        if (h3 && h3.textContent.trim() === recipeName) {
-            card.remove();
-        }
+        if (h3 && h3.textContent.trim() === recipeName) card.remove();
     });
 }
 
