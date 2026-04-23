@@ -596,36 +596,15 @@ function getEmojiSuggestions(name) {
 }
 
 function deleteRecipe(recipeName) {
-    if (!confirm('Rezept "' + recipeName + '" wirklich löschen?')) return;
-
-    // Aus localStorage entfernen (selbst hinzugefügte Rezepte)
     const saved = JSON.parse(localStorage.getItem('recipes')) || {};
     delete saved[recipeName];
     localStorage.setItem('recipes', JSON.stringify(saved));
 
-    // In "gelöscht"-Liste speichern (für fest eingebundene Rezepte)
-    const deleted = JSON.parse(localStorage.getItem('deletedRecipes')) || [];
-    if (!deleted.includes(recipeName)) deleted.push(recipeName);
-    localStorage.setItem('deletedRecipes', JSON.stringify(deleted));
-
-    // Karte aus dem DOM entfernen
     document.querySelectorAll('.recipe-card:not(.add-recipe-card)').forEach(function(card) {
         const h3 = card.querySelector('h3');
         if (h3 && h3.textContent.trim() === recipeName) {
             card.remove();
         }
-    });
-}
-
-function hideDeletedRecipes() {
-    const deleted = JSON.parse(localStorage.getItem('deletedRecipes')) || [];
-    deleted.forEach(function(recipeName) {
-        document.querySelectorAll('.recipe-card:not(.add-recipe-card)').forEach(function(card) {
-            const h3 = card.querySelector('h3');
-            if (h3 && h3.textContent.trim() === recipeName) {
-                card.remove();
-            }
-        });
     });
 }
 
