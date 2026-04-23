@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>McBrownies - Köstliche Brownies Rezepte</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
@@ -49,8 +50,7 @@
             <section id="fruehstueck" class="meal-section">
             <h2 style="text-align: center; color: #FF9500; margin: 40px 0 30px 0;">🌅 Frühstück</h2>
             <div class="recipes">
-                <div class="recipe-card">
-                    <div class="recipe-card-image">🥞</div>
+                <div class="recipe-card">                    <div class="recipe-card-image">🥞</div>
                     <div class="recipe-card-content">
                         <h3>Französische Crêpes</h3>
                         <p>Dünne, zarte Crêpes mit Marmelade oder Nutella.</p>
@@ -87,8 +87,7 @@
                     </div>
                 </div>
 
-                <div class="recipe-card">
-                    <div class="recipe-card-image">🥐</div>
+                <div class="recipe-card">                    <div class="recipe-card-image">🥐</div>
                     <div class="recipe-card-content">
                         <h3>Hafer-Müsli mit Obst</h3>
                         <p>Gesundes, vollwertiges Müsli mit frischen Früchten.</p>
@@ -140,8 +139,7 @@
         <section id="mittag" class="meal-section">
             <h2 style="text-align: center; color: #4CAF50; margin: 40px 0 30px 0;">🍝 Mittag</h2>
             <div class="recipes">
-                <div class="recipe-card">
-                    <div class="recipe-card-image">🍝</div>
+                <div class="recipe-card">                    <div class="recipe-card-image">🍝</div>
                     <div class="recipe-card-content">
                         <h3>Pasta Carbonara</h3>
                         <p>Klassische italienische Pasta mit cremiger Sauce.</p>
@@ -178,8 +176,7 @@
                     </div>
                 </div>
 
-                <div class="recipe-card">
-                    <div class="recipe-card-image">🥗</div>
+                <div class="recipe-card">                    <div class="recipe-card-image">🥗</div>
                     <div class="recipe-card-content">
                         <h3>Mediterraner Salat</h3>
                         <p>Frischer Salat mit Gemüse, Oliven und Feta-Käse.</p>
@@ -231,8 +228,7 @@
         <section id="abend" class="meal-section">
             <h2 style="text-align: center; color: #3F51B5; margin: 40px 0 30px 0;">🍛 Abendessen</h2>
             <div class="recipes">
-                <div class="recipe-card">
-                    <div class="recipe-card-image">🍖</div>
+                <div class="recipe-card">                    <div class="recipe-card-image">🍖</div>
                     <div class="recipe-card-content">
                         <h3>Gebratenes Hühnchen</h3>
                         <p>Saftiges Hühnchen mit Knoblauch und Kräutern.</p>
@@ -269,8 +265,7 @@
                     </div>
                 </div>
 
-                <div class="recipe-card">
-                    <div class="recipe-card-image">🍲</div>
+                <div class="recipe-card">                    <div class="recipe-card-image">🍲</div>
                     <div class="recipe-card-content">
                         <h3>Gemüse-Eintopf</h3>
                         <p>Herzhafter Eintopf mit saisonalem Gemüse und Kartoffeln.</p>
@@ -322,8 +317,7 @@
         <section id="snacks" class="meal-section">
             <h2 style="text-align: center; color: #E91E8C; margin: 40px 0 30px 0;">🍪 Snacks & Süßes</h2>
             <div class="recipes">
-                <div class="recipe-card">
-                    <div class="recipe-card-image">🍪</div>
+                <div class="recipe-card">                    <div class="recipe-card-image">🍪</div>
                     <div class="recipe-card-content">
                         <h3>Chocolate Chip Cookies</h3>
                         <p>Knusprig außen, saftig innen mit Schokoladenstückchen.</p>
@@ -360,8 +354,7 @@
                     </div>
                 </div>
 
-                <div class="recipe-card">
-                    <div class="recipe-card-image">🍫</div>
+                <div class="recipe-card">                    <div class="recipe-card-image">🍫</div>
                     <div class="recipe-card-content">
                         <h3>Klassische Brownies</h3>
                         <p>Der Klassiker unter den Brownies - schokoladig und saftig.</p>
@@ -431,7 +424,10 @@
                     <label>Bild des Gerichts:</label>
                     <div class="photo-type-options">
                         <label class="photo-type-label">
-                            <input type="radio" name="photoType" value="photo" checked> 📷 Foto hochladen
+                            <input type="radio" name="photoType" value="kamera" checked> 📸 Kamera
+                        </label>
+                        <label class="photo-type-label">
+                            <input type="radio" name="photoType" value="photo"> 📁 Datei hochladen
                         </label>
                         <label class="photo-type-label">
                             <input type="radio" name="photoType" value="emoji"> 😊 Emoji wählen
@@ -444,7 +440,21 @@
                         </label>
                     </div>
 
-                    <div id="photoUploadSection" style="margin-top:10px;">
+                    <div id="kameraSection" style="margin-top:10px;">
+                        <button type="button" id="openCameraBtn" class="btn">📸 Kamera öffnen</button>
+                        <video id="cameraPreview" autoplay playsinline style="display:none;"></video>
+                        <canvas id="cameraCanvas" style="display:none;"></canvas>
+                        <div id="cameraControls" class="camera-btn-row" style="display:none;">
+                            <button type="button" id="captureBtn" class="btn">📸 Foto machen</button>
+                        </div>
+                        <div id="cameraConfirmControls" class="camera-btn-row" style="display:none;">
+                            <button type="button" id="retakeBtn" class="btn camera-retake-btn">🔄 Nochmal</button>
+                            <button type="button" id="confirmPhotoBtn" class="btn camera-confirm-btn">✓ Verwenden</button>
+                        </div>
+                        <p id="cameraPhotoConfirmed" class="camera-confirmed-msg" style="display:none;">✓ Foto gespeichert – weiter ausfüllen und speichern</p>
+                    </div>
+
+                    <div id="photoUploadSection" style="display:none; margin-top:10px;">
                         <input type="file" id="recipePhoto" accept="image/*">
                     </div>
 
@@ -474,6 +484,11 @@
                 </div>
 
                 <div class="form-group">
+                    <label for="zubereitung">Zubereitung (Schritt für Schritt):</label>
+                    <textarea id="zubereitung" placeholder="z.B.&#10;Mehl und Salz in einer Schüssel mischen&#10;Eier und Milch hinzufügen und verrühren&#10;Bei mittlerer Hitze 2 Minuten pro Seite backen"></textarea>
+                </div>
+
+                <div class="form-group">
                     <label for="preparationTime">Zubereitungszeit (in Minuten):</label>
                     <input type="number" id="preparationTime" min="1" placeholder="z.B. 30" required>
                 </div>
@@ -483,6 +498,28 @@
                     <button type="submit" class="save-btn">Rezept speichern</button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- Recipe View Modal -->
+    <div id="recipeViewModal" class="modal">
+        <div class="modal-content recipe-view-content">
+            <span class="close-btn" onclick="closeRecipeViewModal()">&times;</span>
+            <div id="recipeViewImage" class="recipe-view-image"></div>
+            <h2 id="recipeViewTitle"></h2>
+            <div id="recipeViewBody"></div>
+
+            <div id="recipeDeleteArea" style="display:none; margin-top:24px; text-align:center;">
+                <button type="button" id="recipeDeleteBtn" class="recipe-view-delete-btn">🗑 Rezept löschen</button>
+            </div>
+
+            <div id="recipeDeleteConfirm" style="display:none;" class="delete-confirm-panel">
+                <p>Möchtest du dieses Rezept wirklich löschen?</p>
+                <div class="delete-confirm-buttons">
+                    <button type="button" id="confirmDeleteYes" class="btn delete-yes-btn">Ja, löschen</button>
+                    <button type="button" id="confirmDeleteNo" class="btn delete-no-btn">Nein, abbrechen</button>
+                </div>
+            </div>
         </div>
     </div>
 
