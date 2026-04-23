@@ -807,11 +807,27 @@
             font-style: italic;
         }
 
-        #aiImagePreview img {
-            width: 100%;
-            border-radius: 8px;
-            display: block;
-            margin-top: 8px;
+        .ai-suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .ai-suggestion-btn {
+            font-size: 2.4em;
+            background: none;
+            border: 2px solid #ddd;
+            border-radius: 12px;
+            padding: 6px 12px;
+            cursor: pointer;
+            transition: border-color 0.2s, background-color 0.2s, transform 0.15s;
+        }
+
+        .ai-suggestion-btn:hover {
+            border-color: #E91E8C;
+            background-color: #fff5f7;
+            transform: scale(1.15);
         }
 
         .no-image-info {
@@ -1527,24 +1543,35 @@
                 radio.addEventListener('change', function() { updatePhotoSections(this.value); });
             });
 
-            // KI-Vorschlag Button
+            // KI-Vorschlag Button: schlägt passende Emojis zum Rezeptnamen vor
             document.getElementById('aiSuggestBtn').addEventListener('click', function() {
-                const name = document.getElementById('recipeName').value.trim() || 'food';
+                const name    = document.getElementById('recipeName').value.trim().toLowerCase();
                 const preview = document.getElementById('aiImagePreview');
-                preview.innerHTML = '<p class="ai-loading">Bild wird gesucht…</p>';
-                const url = 'https://loremflickr.com/400/300/' + encodeURIComponent(name) + ',food?lock=' + Date.now();
-                const img = new Image();
-                img.onload = function() {
-                    img.style.cssText = 'width:100%;border-radius:8px;display:block;margin-top:8px;';
-                    preview.innerHTML = '';
-                    preview.appendChild(img);
-                    window.aiSuggestedImageUrl = url;
-                };
-                img.onerror = function() {
-                    preview.innerHTML = '<p class="ai-loading">Kein passendes Bild gefunden.</p>';
-                    window.aiSuggestedImageUrl = null;
-                };
-                img.src = url;
+                const suggestions = getEmojiSuggestions(name);
+
+                preview.innerHTML = '<p class="ai-loading" style="margin-bottom:6px;">Tippe einen Vorschlag an:</p>';
+                const row = document.createElement('div');
+                row.className = 'ai-suggestions';
+
+                suggestions.forEach(function(emoji) {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'ai-suggestion-btn';
+                    btn.textContent = emoji;
+                    btn.addEventListener('click', function() {
+                        // Automatisch auf "Emoji wählen" wechseln und Emoji setzen
+                        document.querySelector('input[name="photoType"][value="emoji"]').checked = true;
+                        updatePhotoSections('emoji');
+                        window.selectedRecipeEmoji = emoji;
+                        document.getElementById('selectedEmojiPreview').textContent = emoji;
+                        document.querySelectorAll('.emoji-option').forEach(function(e) {
+                            e.classList.toggle('selected', e.textContent === emoji);
+                        });
+                    });
+                    row.appendChild(btn);
+                });
+
+                preview.appendChild(row);
             });
 
             // Suchfunktion
@@ -1731,6 +1758,63 @@
                 document.querySelector('#siteContent .container').appendChild(noResults);
             }
             noResults.style.display = (query && totalVisible === 0) ? 'block' : 'none';
+        }
+
+        function getEmojiSuggestions(name) {
+            const map = [
+                { keys: ['pizza'],                                          e: '🍕' },
+                { keys: ['pasta','spaghetti','nudel','carbonara','bolognese','penne'], e: '🍝' },
+                { keys: ['suppe','eintopf','brühe'],                        e: '🍲' },
+                { keys: ['salat'],                                          e: '🥗' },
+                { keys: ['burger','hamburger'],                             e: '🍔' },
+                { keys: ['pommes','fries'],                                 e: '🍟' },
+                { keys: ['hähnchen','huhn','chicken','hühnchen'],           e: '🍗' },
+                { keys: ['steak','rind','beef','schnitzel','fleisch'],      e: '🥩' },
+                { keys: ['fisch','lachs','thunfisch','forelle'],            e: '🐟' },
+                { keys: ['sushi','maki'],                                   e: '🍣' },
+                { keys: ['taco'],                                           e: '🌮' },
+                { keys: ['wrap','burrito'],                                 e: '🌯' },
+                { keys: ['sandwich','toast'],                               e: '🥪' },
+                { keys: ['ei','omelette','rührei','spiegelei'],             e: '🍳' },
+                { keys: ['pfannkuchen','pancake','crepe','crêpe','waffel'], e: '🥞' },
+                { keys: ['wurst','hot dog','bratwurst'],                    e: '🌭' },
+                { keys: ['käse'],                                           e: '🧀' },
+                { keys: ['brot','brötchen','baguette'],                     e: '🍞' },
+                { keys: ['croissant'],                                      e: '🥐' },
+                { keys: ['müsli','hafer','porridge'],                       e: '🥣' },
+                { keys: ['reis'],                                           e: '🍚' },
+                { keys: ['curry'],                                          e: '🍛' },
+                { keys: ['ramen'],                                          e: '🍜' },
+                { keys: ['kuchen','torte','cake','käsekuchen'],             e: '🍰' },
+                { keys: ['geburtstag'],                                     e: '🎂' },
+                { keys: ['muffin','cupcake'],                               e: '🧁' },
+                { keys: ['donut','krapfen','berliner'],                     e: '🍩' },
+                { keys: ['keks','plätzchen','cookie','brownie'],            e: '🍪' },
+                { keys: ['schokolade','schoko'],                            e: '🍫' },
+                { keys: ['eis','glace'],                                    e: '🍦' },
+                { keys: ['smoothie','shake','milchshake'],                  e: '🥤' },
+                { keys: ['kaffee','cappuccino','espresso','latte'],         e: '☕' },
+                { keys: ['tee'],                                            e: '🍵' },
+                { keys: ['brokkoli','broccoli','gemüse'],                   e: '🥦' },
+                { keys: ['karotte','möhre'],                                e: '🥕' },
+                { keys: ['kartoffel'],                                      e: '🥔' },
+                { keys: ['avocado'],                                        e: '🥑' },
+                { keys: ['apfel'],                                          e: '🍎' },
+                { keys: ['erdbeere'],                                       e: '🍓' },
+                { keys: ['banane'],                                         e: '🍌' },
+                { keys: ['zitrone'],                                        e: '🍋' },
+                { keys: ['tomate'],                                         e: '🍅' },
+                { keys: ['mais'],                                           e: '🌽' },
+                { keys: ['knoblauch'],                                      e: '🧄' },
+                { keys: ['zwiebel'],                                        e: '🧅' },
+            ];
+            const matches = [];
+            map.forEach(function(entry) {
+                if (entry.keys.some(function(k) { return name.includes(k); })) {
+                    matches.push(entry.e);
+                }
+            });
+            return matches.length > 0 ? matches.slice(0, 6) : ['🍽️', '🥘', '🫕', '🍱', '🧆', '🥙'];
         }
 
         function searchInSavedIngredients(recipeName, query) {
