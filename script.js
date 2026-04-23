@@ -174,11 +174,23 @@ function openRecipeModal(recipeName) {
         body.innerHTML = html;
     }
 
+    // Löschen-Button nur für eigene (gespeicherte) Rezepte zeigen
+    const deleteArea    = document.getElementById('recipeDeleteArea');
+    const deleteConfirm = document.getElementById('recipeDeleteConfirm');
+    deleteConfirm.style.display = 'none';
+    if (recipe) {
+        deleteArea.style.display = 'block';
+    } else {
+        deleteArea.style.display = 'none';
+    }
+
     document.getElementById('recipeViewModal').style.display = 'block';
 }
 
 function closeRecipeViewModal() {
-    document.getElementById('recipeViewModal').style.display = 'none';
+    document.getElementById('recipeDeleteConfirm').style.display = 'none';
+    document.getElementById('recipeDeleteArea').style.display    = 'none';
+    document.getElementById('recipeViewModal').style.display     = 'none';
 }
 
 // Handle form submission
