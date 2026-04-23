@@ -681,6 +681,88 @@
             box-shadow: 0 4px 20px rgba(233, 30, 140, 0.1);
         }
 
+        /* Foto-Auswahl im Modal */
+        .photo-type-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .photo-type-label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 8px 14px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.9em;
+            transition: border-color 0.2s, background-color 0.2s;
+            user-select: none;
+        }
+
+        .photo-type-label:hover { border-color: #E91E8C; background-color: #fff5f7; }
+        .photo-type-label input[type="radio"] { accent-color: #E91E8C; }
+
+        .emoji-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 5px;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-top: 8px;
+        }
+
+        .emoji-option {
+            font-size: 1.5em;
+            text-align: center;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 6px;
+            border: 2px solid transparent;
+            background: none;
+            transition: background-color 0.15s, transform 0.15s;
+        }
+
+        .emoji-option:hover { background-color: #fff5f7; transform: scale(1.25); }
+        .emoji-option.selected { border-color: #E91E8C; background-color: #ffe0f0; }
+
+        .selected-emoji-preview {
+            text-align: center;
+            font-size: 2.5em;
+            margin-top: 8px;
+            min-height: 1.5em;
+        }
+
+        .ai-loading {
+            text-align: center;
+            color: #888;
+            padding: 15px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.9em;
+            font-style: italic;
+        }
+
+        #aiImagePreview img {
+            width: 100%;
+            border-radius: 8px;
+            display: block;
+            margin-top: 8px;
+        }
+
+        .no-image-info {
+            color: #888;
+            font-style: italic;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.9em;
+            margin-top: 8px;
+        }
+
         /* ===== 3D DESIGN ===== */
 
         /* Titel: 3D-Extrusion */
@@ -1153,8 +1235,39 @@
                     <input type="text" id="recipeName" placeholder="z.B. Spaghetti Bolognese" required>
                 </div>
                 <div class="form-group">
-                    <label for="recipePhoto">Foto des Gerichts:</label>
-                    <input type="file" id="recipePhoto" accept="image/*" required>
+                    <label>Bild des Gerichts:</label>
+                    <div class="photo-type-options">
+                        <label class="photo-type-label">
+                            <input type="radio" name="photoType" value="photo" checked> 📷 Foto hochladen
+                        </label>
+                        <label class="photo-type-label">
+                            <input type="radio" name="photoType" value="emoji"> 😊 Emoji wählen
+                        </label>
+                        <label class="photo-type-label">
+                            <input type="radio" name="photoType" value="ai"> ✨ KI schlägt vor
+                        </label>
+                        <label class="photo-type-label">
+                            <input type="radio" name="photoType" value="none"> ⬜ Kein Bild
+                        </label>
+                    </div>
+
+                    <div id="photoUploadSection" style="margin-top:10px;">
+                        <input type="file" id="recipePhoto" accept="image/*">
+                    </div>
+
+                    <div id="emojiPickerSection" style="display:none; margin-top:10px;">
+                        <div class="emoji-grid" id="emojiGrid"></div>
+                        <div class="selected-emoji-preview" id="selectedEmojiPreview"></div>
+                    </div>
+
+                    <div id="aiSuggestionSection" style="display:none; margin-top:10px;">
+                        <button type="button" id="aiSuggestBtn" class="btn">Vorschlag anzeigen</button>
+                        <div id="aiImagePreview"></div>
+                    </div>
+
+                    <div id="noImageSection" style="display:none; margin-top:10px;">
+                        <p class="no-image-info">Das Rezept wird ohne Bild gespeichert.</p>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -1181,6 +1294,25 @@
     </div>
 
     <script>
+        function updatePhotoSections(type) {
+            document.getElementById('photoUploadSection').style.display  = type === 'photo' ? 'block' : 'none';
+            document.getElementById('emojiPickerSection').style.display  = type === 'emoji' ? 'block' : 'none';
+            document.getElementById('aiSuggestionSection').style.display = type === 'ai'    ? 'block' : 'none';
+            document.getElementById('noImageSection').style.display      = type === 'none'  ? 'block' : 'none';
+        }
+
+        function setupPhotoTypeSelection() {
+            updatePhotoSections('photo');
+            document.getElementById('aiImagePreview').innerHTML = '';
+            window.aiSuggestedImageUrl = null;
+        }
+
+        function initializeEmojiSelection() {
+            window.selectedRecipeEmoji = null;
+            document.getElementById('selectedEmojiPreview').textContent = '';
+            document.querySelectorAll('.emoji-option').forEach(function(e) { e.classList.remove('selected'); });
+        }
+
         // Open Add Recipe Modal
         function openAddRecipeModal(category) {
             const modal = document.getElementById('recipeModal');
@@ -1229,32 +1361,47 @@
         // Handle form submission
         document.getElementById('recipeForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            
-            const recipeName = document.getElementById('recipeName').value;
-            const photoFile = document.getElementById('recipePhoto').files[0];
-            const ingredients = document.getElementById('ingredients').value;
-            const nutrition = document.getElementById('nutrition').value;
+
+            const recipeName      = document.getElementById('recipeName').value;
+            const ingredients     = document.getElementById('ingredients').value;
+            const nutrition       = document.getElementById('nutrition').value;
             const preparationTime = document.getElementById('preparationTime').value;
-            const category = document.getElementById('recipeModal').dataset.category;
+            const category        = document.getElementById('recipeModal').dataset.category;
+            const photoType       = document.querySelector('input[name="photoType"]:checked').value;
 
-            // Create recipe data object
-            const recipeData = {
-                name: recipeName,
-                photo: photoFile ? photoFile.name : 'Kein Foto',
-                ingredients: ingredients,
-                nutrition: nutrition,
-                preparationTime: preparationTime + ' Minuten',
-                category: category
-            };
+            function saveRecipe(imageData) {
+                const recipeData = {
+                    name: recipeName,
+                    imageType: photoType,
+                    imageData: imageData,
+                    ingredients: ingredients,
+                    nutrition: nutrition,
+                    preparationTime: preparationTime + ' Minuten',
+                    category: category
+                };
+                let savedRecipes = JSON.parse(localStorage.getItem('recipes')) || {};
+                savedRecipes[recipeName] = recipeData;
+                localStorage.setItem('recipes', JSON.stringify(savedRecipes));
+                alert('Rezept "' + recipeName + '" erfolgreich gespeichert!');
+                closeRecipeModal();
+            }
 
-            // Save to localStorage
-            let savedRecipes = JSON.parse(localStorage.getItem('recipes')) || {};
-            savedRecipes[recipeName] = recipeData;
-            localStorage.setItem('recipes', JSON.stringify(savedRecipes));
-
-            // Show success message
-            alert('Rezept "' + recipeName + '" erfolgreich gespeichert!');
-            closeRecipeModal();
+            if (photoType === 'photo') {
+                const file = document.getElementById('recipePhoto').files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(ev) { saveRecipe(ev.target.result); };
+                    reader.readAsDataURL(file);
+                } else {
+                    saveRecipe(null);
+                }
+            } else if (photoType === 'emoji') {
+                saveRecipe(window.selectedRecipeEmoji || '🍽️');
+            } else if (photoType === 'ai') {
+                saveRecipe(window.aiSuggestedImageUrl || null);
+            } else {
+                saveRecipe(null);
+            }
         });
 
         // Add click handlers to all "Zum Rezept" buttons
@@ -1289,6 +1436,48 @@
                     };
                     button.style.cursor = 'pointer';
                 }
+            });
+
+            // Emoji-Grid beim Laden einmalig aufbauen
+            const foodEmojis = ['🍕','🍝','🍜','🍲','🍛','🍣','🍱','🥘','🍗','🍖','🥩','🥗','🥙','🌮','🌯','🥪','🍔','🍟','🌭','🥞','🧇','🥓','🍳','🧆','🍞','🥐','🥖','🧀','🥦','🥕','🌽','🥔','🍠','🍰','🎂','🧁','🍩','🍪','🍫','🍦','🍨','🥤','☕','🍵','🫕','🫔','🍱','🥣','🧇','🫙'];
+            const emojiGrid = document.getElementById('emojiGrid');
+            foodEmojis.forEach(function(emoji) {
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'emoji-option';
+                btn.textContent = emoji;
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.emoji-option').forEach(function(e) { e.classList.remove('selected'); });
+                    btn.classList.add('selected');
+                    window.selectedRecipeEmoji = emoji;
+                    document.getElementById('selectedEmojiPreview').textContent = emoji;
+                });
+                emojiGrid.appendChild(btn);
+            });
+
+            // Radio-Buttons für Bildauswahl
+            document.querySelectorAll('input[name="photoType"]').forEach(function(radio) {
+                radio.addEventListener('change', function() { updatePhotoSections(this.value); });
+            });
+
+            // KI-Vorschlag Button
+            document.getElementById('aiSuggestBtn').addEventListener('click', function() {
+                const name = document.getElementById('recipeName').value.trim() || 'food';
+                const preview = document.getElementById('aiImagePreview');
+                preview.innerHTML = '<p class="ai-loading">Bild wird gesucht…</p>';
+                const url = 'https://loremflickr.com/400/300/' + encodeURIComponent(name) + ',food?lock=' + Date.now();
+                const img = new Image();
+                img.onload = function() {
+                    img.style.cssText = 'width:100%;border-radius:8px;display:block;margin-top:8px;';
+                    preview.innerHTML = '';
+                    preview.appendChild(img);
+                    window.aiSuggestedImageUrl = url;
+                };
+                img.onerror = function() {
+                    preview.innerHTML = '<p class="ai-loading">Kein passendes Bild gefunden.</p>';
+                    window.aiSuggestedImageUrl = null;
+                };
+                img.src = url;
             });
 
             // Load saved comments and reactions
