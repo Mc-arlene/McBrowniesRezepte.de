@@ -219,7 +219,8 @@ document.getElementById('recipeForm').addEventListener('submit', function(e) {
         let savedRecipes = JSON.parse(localStorage.getItem('recipes')) || {};
         savedRecipes[recipeName] = recipeData;
         localStorage.setItem('recipes', JSON.stringify(savedRecipes));
-        alert('Rezept "' + recipeName + '" erfolgreich gespeichert!');
+        renderSavedRecipeCard(recipeData);
+        loadCommentsAndReactions();
         closeRecipeModal();
     }
 
