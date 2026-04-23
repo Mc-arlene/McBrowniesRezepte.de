@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Cake body -->
+  <rect x="5" y="15" width="22" height="14" rx="1.5" fill="#FFB3D9"/>
+
+  <!-- Cake layers -->
+  <rect x="5" y="19.5" width="22" height="2" fill="#FF69B4" opacity="0.55"/>
+  <rect x="5" y="23.5" width="22" height="2" fill="#FF69B4" opacity="0.55"/>
+
+  <!-- Frosting waves on top -->
+  <path d="M5 15 Q7.5 11 10 15 Q12.5 11 16 15 Q19.5 11 22 15 Q24.5 11 27 15 Z" fill="#FF69B4"/>
+
+  <!-- Cherry stem -->
+  <path d="M16 11 Q18.5 7 20 6" stroke="#C2185B" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+
+  <!-- Cherry -->
+  <circle cx="20.5" cy="5.5" r="3.5" fill="#E91E8C"/>
+  <!-- Cherry highlight -->
+  <circle cx="19.2" cy="4.2" r="1.1" fill="#FFB3D9" opacity="0.65"/>
+</svg>
