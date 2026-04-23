@@ -365,6 +365,9 @@ document.addEventListener('DOMContentLoaded', function() {
         filterRecipes('');
     });
 
+    // Gelöschte Rezepte ausblenden
+    hideDeletedRecipes();
+
     // Load saved comments and reactions
     loadCommentsAndReactions();
 
