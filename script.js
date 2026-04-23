@@ -743,10 +743,22 @@ function renderSavedRecipeCard(recipeData) {
 }
 
 function loadSavedRecipes() {
-    const saved = JSON.parse(localStorage.getItem('recipes')) || {};
-    Object.values(saved).forEach(function(recipe) {
-        renderSavedRecipeCard(recipe);
-    });
+    db.ref('recipes').once('value')
+        .then(function(snapshot) {
+            window.recipesCache = snapshot.val() || {};
+            Object.values(window.recipesCache).forEach(function(recipe) {
+                if (recipe && recipe.name) renderSavedRecipeCard(recipe);
+            });
+            loadCommentsAndReactions();
+        })
+        .catch(function() {
+            // Offline-Fallback: localStorage
+            window.recipesCache = JSON.parse(localStorage.getItem('recipes')) || {};
+            Object.values(window.recipesCache).forEach(function(recipe) {
+                renderSavedRecipeCard(recipe);
+            });
+            loadCommentsAndReactions();
+        });
 }
 
 function deleteRecipe(recipeName) {
