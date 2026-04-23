@@ -394,6 +394,9 @@ document.addEventListener('DOMContentLoaded', function() {
         filterRecipes('');
     });
 
+    // Gespeicherte Rezepte als Karten einblenden
+    loadSavedRecipes();
+
     // Load saved comments and reactions
     loadCommentsAndReactions();
 
