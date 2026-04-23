@@ -1,1 +1,1276 @@
-hallo
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>McBrownies - Köstliche Brownies Rezepte</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #ffe6f2;
+        }
+
+        header {
+            background: linear-gradient(135deg, #E91E8C 0%, #FF69B4 100%);
+            color: white;
+            padding: 90px 20px 70px;
+            text-align: center;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.15);
+        }
+
+        header h1 {
+            font-size: 3.2em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.95;
+            max-width: 760px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        nav {
+            background-color: #333;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        nav a:hover {
+            background-color: #E91E8C;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            background: white;
+            padding: 60px 30px;
+            text-align: center;
+            margin: 30px 0;
+            border-radius: 15px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+
+        .hero h2 {
+            color: #E91E8C;
+            font-size: 2.4em;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+        }
+
+        .hero p {
+            font-size: 1.15em;
+            margin-bottom: 30px;
+            color: #555;
+            max-width: 760px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.7;
+        }
+
+        .landing-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .site-content.hidden {
+            display: none;
+        }
+
+        .landing-hero {
+            margin-top: 0;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: #E91E8C;
+            color: white;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        .btn:hover {
+            background-color: #FF69B4;
+        }
+
+        /* Meal Section Colors */
+        #fruehstueck .recipe-card-image {
+            background: linear-gradient(135deg, #FF9500 0%, #FFB84D 100%) !important;
+        }
+
+        #fruehstueck .recipe-card h3 {
+            color: #FF9500 !important;
+        }
+
+        #fruehstueck .btn {
+            background-color: #FF9500;
+        }
+
+        #fruehstueck .btn:hover {
+            background-color: #FFB84D;
+        }
+
+        #fruehstueck > h2 {
+            color: #FF9500 !important;
+        }
+
+        #mittag .recipe-card-image {
+            background: linear-gradient(135deg, #4CAF50 0%, #4CAF50 100%) !important;
+        }
+
+        #mittag .recipe-card h3 {
+            color: #4CAF50 !important;
+        }
+
+        #mittag .btn {
+            background-color: #4CAF50;
+        }
+
+        #mittag .btn:hover {
+            background-color: #81C784;
+        }
+
+        #mittag > h2 {
+            color: #4CAF50 !important;
+        }
+
+        #abend .recipe-card-image {
+            background: linear-gradient(135deg, #3F51B5 0%, #7986CB 100%) !important;
+        }
+
+        #abend .recipe-card h3 {
+            color: #3F51B5 !important;
+        }
+
+        #abend .btn {
+            background-color: #3F51B5;
+        }
+
+        #abend .btn:hover {
+            background-color: #7986CB;
+        }
+
+        #abend > h2 {
+            color: #3F51B5 !important;
+        }
+
+        #snacks .recipe-card-image {
+            background: linear-gradient(135deg, #E91E8C 0%, #FF69B4 100%) !important;
+        }
+
+        #snacks .recipe-card h3 {
+            color: #E91E8C !important;
+        }
+
+        #snacks .btn {
+            background-color: #E91E8C;
+        }
+
+        #snacks .btn:hover {
+            background-color: #FF69B4;
+        }
+
+        #snacks > h2 {
+            color: #E91E8C !important;
+        }
+
+        .recipes {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .recipe-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 25px rgba(0,0,0,0.15);
+        }
+
+        .recipe-card-image {
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 100%);
+            height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+        }
+
+        .recipe-card-content {
+            padding: 20px;
+        }
+
+        .recipe-card h3 {
+            color: #8B4513;
+            margin-bottom: 10px;
+        }
+
+        .recipe-card p {
+            color: #666;
+            font-size: 0.95em;
+            margin-bottom: 15px;
+        }
+
+        /* Comments and Reactions */
+        .recipe-comments {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+
+        .reactions {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .reaction-btn {
+            background: none;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .reaction-btn:hover {
+            border-color: #E91E8C;
+            background-color: #fff5f7;
+        }
+
+        .reaction-btn.active {
+            background-color: #E91E8C;
+            border-color: #E91E8C;
+            color: white;
+        }
+
+        .reaction-count {
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .comments-section {
+            margin-top: 10px;
+        }
+
+        .comment {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .comment-author {
+            font-weight: bold;
+            color: #E91E8C;
+            margin-bottom: 3px;
+        }
+
+        .comment-text {
+            color: #333;
+        }
+
+        .comment-date {
+            font-size: 0.8em;
+            color: #999;
+            margin-top: 3px;
+        }
+
+        .add-comment {
+            margin-top: 10px;
+        }
+
+        .comment-input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin-bottom: 8px;
+        }
+
+        .comment-submit-btn {
+            background-color: #E91E8C;
+            color: white;
+            border: none;
+            padding: 6px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background-color 0.3s;
+        }
+
+        .comment-submit-btn:hover {
+            background-color: #FF69B4;
+        }
+
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            margin-top: 50px;
+        }
+
+        footer p {
+            margin: 5px 0;
+        }
+
+        .add-circle {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 3em;
+            font-weight: bold;
+            margin: 0 auto;
+        }
+
+        .add-recipe-card .recipe-card-content {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .add-recipe-card .recipe-card-content h3 {
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .add-recipe-card .recipe-card-content p {
+            color: #666;
+            margin: 0;
+        }
+
+        .add-card--fruehstueck .add-circle,
+        #fruehstueck .add-circle {
+            background-color: #FF9500;
+        }
+
+        .add-card--fruehstueck .recipe-card-content h3 {
+            color: #FF9500;
+        }
+
+        .add-card--mittag .add-circle,
+        #mittag .add-circle {
+            background-color: #4CAF50;
+        }
+
+        .add-card--mittag .recipe-card-content h3 {
+            color: #4CAF50;
+        }
+
+        .add-card--abend .add-circle,
+        #abend .add-circle {
+            background-color: #3F51B5;
+        }
+
+        .add-card--abend .recipe-card-content h3 {
+            color: #3F51B5;
+        }
+
+        .add-card--snacks .add-circle,
+        #snacks .add-circle {
+            background-color: #E91E8C;
+        }
+
+        .add-card--snacks .recipe-card-content h3 {
+            color: #E91E8C;
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-btn {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #E91E8C;
+        }
+
+        .modal h2 {
+            color: #333;
+            margin-bottom: 20px;
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="file"],
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group input[type="file"]:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #E91E8C;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .ingredients-list {
+            margin-top: 15px;
+        }
+
+        .ingredient-item {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .ingredient-item input {
+            flex: 1;
+        }
+
+        .ingredient-item button {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .ingredient-item button:hover {
+            background-color: #ff5252;
+        }
+
+        .add-ingredient-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .add-ingredient-btn:hover {
+            background-color: #81C784;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+        }
+
+        .modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        .save-btn {
+            background-color: #E91E8C;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background-color: #FF69B4;
+        }
+
+        .cancel-btn {
+            background-color: #ddd;
+            color: #333;
+        }
+
+        .cancel-btn:hover {
+            background-color: #bbb;
+        }
+
+        .add-recipe-card {
+            border: 2px dashed #ddd;
+            background-color: #fafafa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .add-recipe-card:hover {
+            border-color: #E91E8C;
+            background-color: #fff5f7;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(233, 30, 140, 0.1);
+        }
+    </style>
+    <div id="landingPage" class="landing-page">
+        <header>
+            <h1>👨‍🍳 Meine Rezepte</h1>
+            <p>Selbstgemachte Rezepte - lecker, einfach, vielfältig</p>
+        </header>
+
+        <div class="container">
+            <section id="landing" class="hero landing-hero">
+                <h2>Willkommen auf Ihrer persönlichen Rezeptseite</h2>
+                <p>Hier können Sie all Ihre Rezeptideen dokumentieren, teilen und weiterentwickeln. Sammeln Sie Lieblingsrezepte, entdecken Sie neue Gerichte und gestalten Sie Ihr persönliches Kochbuch für die ganze Familie.</p>
+                <p>Starten Sie jetzt mit Frühstück, Mittag, Abendessen oder süßen Snacks – Ihre nächste Idee ist nur einen Klick entfernt.</p>
+                <a href="#" id="enterSiteBtn" class="btn">Zur Rezeptseite</a>
+            </section>
+        </div>
+    </div>
+
+    <div id="siteContent" class="site-content hidden">
+        <nav>
+            <ul>
+                <li><a href="#landing">Startseite</a></li>
+                <li><a href="#fruehstueck">Frühstück</a></li>
+                <li><a href="#mittag">Mittag</a></li>
+                <li><a href="#abend">Abendessen</a></li>
+                <li><a href="#snacks">Snacks & Süßes</a></li>
+                <li><a href="#kontakt">Kontakt</a></li>
+            </ul>
+        </nav>
+
+        <div class="container">
+            <section id="fruehstueck" class="meal-section">
+            <h2 style="text-align: center; color: #FF9500; margin: 40px 0 30px 0;">🌅 Frühstück</h2>
+            <div class="recipes">
+                <div class="recipe-card">
+                    <div class="recipe-card-image">🥞</div>
+                    <div class="recipe-card-content">
+                        <h3>Französische Crêpes</h3>
+                        <p>Dünne, zarte Crêpes mit Marmelade oder Nutella.</p>
+                        <a href="#" class="btn">Zum Rezept</a>
+                    </div>
+                    
+                    <div class="recipe-comments">
+                        <div class="reactions">
+                            <button class="reaction-btn" data-recipe="Französische Crêpes" data-emoji="👍">
+                                👍 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Französische Crêpes" data-emoji="❤️">
+                                ❤️ <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Französische Crêpes" data-emoji="😊">
+                                😊 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Französische Crêpes" data-emoji="😢">
+                                😢 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Französische Crêpes" data-emoji="😡">
+                                😡 <span class="reaction-count">0</span>
+                            </button>
+                        </div>
+                        
+                        <div class="comments-section" data-recipe="Französische Crêpes">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                        
+                        <div class="add-comment">
+                            <textarea class="comment-input" placeholder="Teilen Sie Ihre Meinung zu diesem Rezept..." data-recipe="Französische Crêpes"></textarea>
+                            <button class="comment-submit-btn" data-recipe="Französische Crêpes">Kommentar senden</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card">
+                    <div class="recipe-card-image">🥐</div>
+                    <div class="recipe-card-content">
+                        <h3>Hafer-Müsli mit Obst</h3>
+                        <p>Gesundes, vollwertiges Müsli mit frischen Früchten.</p>
+                        <a href="#" class="btn">Zum Rezept</a>
+                    </div>
+                    
+                    <div class="recipe-comments">
+                        <div class="reactions">
+                            <button class="reaction-btn" data-recipe="Hafer-Müsli mit Obst" data-emoji="👍">
+                                👍 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Hafer-Müsli mit Obst" data-emoji="❤️">
+                                ❤️ <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Hafer-Müsli mit Obst" data-emoji="😊">
+                                😊 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Hafer-Müsli mit Obst" data-emoji="😢">
+                                😢 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Hafer-Müsli mit Obst" data-emoji="😡">
+                                😡 <span class="reaction-count">0</span>
+                            </button>
+                        </div>
+                        
+                        <div class="comments-section" data-recipe="Hafer-Müsli mit Obst">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                        
+                        <div class="add-comment">
+                            <textarea class="comment-input" placeholder="Teilen Sie Ihre Meinung zu diesem Rezept..." data-recipe="Hafer-Müsli mit Obst"></textarea>
+                            <button class="comment-submit-btn" data-recipe="Hafer-Müsli mit Obst">Kommentar senden</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card add-recipe-card add-card--fruehstueck" onclick="openAddRecipeModal('fruehstueck')">
+                    <div class="recipe-card-image">
+                        <div class="add-circle">+</div>
+                    </div>
+                    <div class="recipe-card-content">
+                        <h3>Neues Rezept hinzufügen</h3>
+                        <p>Klicken Sie hier, um ein neues Frühstücksrezept zu erstellen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mittag" class="meal-section">
+            <h2 style="text-align: center; color: #4CAF50; margin: 40px 0 30px 0;">🍝 Mittag</h2>
+            <div class="recipes">
+                <div class="recipe-card">
+                    <div class="recipe-card-image">🍝</div>
+                    <div class="recipe-card-content">
+                        <h3>Pasta Carbonara</h3>
+                        <p>Klassische italienische Pasta mit cremiger Sauce.</p>
+                        <a href="#" class="btn">Zum Rezept</a>
+                    </div>
+                    
+                    <div class="recipe-comments">
+                        <div class="reactions">
+                            <button class="reaction-btn" data-recipe="Pasta Carbonara" data-emoji="👍">
+                                👍 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Pasta Carbonara" data-emoji="❤️">
+                                ❤️ <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Pasta Carbonara" data-emoji="😊">
+                                😊 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Pasta Carbonara" data-emoji="😢">
+                                😢 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Pasta Carbonara" data-emoji="😡">
+                                😡 <span class="reaction-count">0</span>
+                            </button>
+                        </div>
+                        
+                        <div class="comments-section" data-recipe="Pasta Carbonara">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                        
+                        <div class="add-comment">
+                            <textarea class="comment-input" placeholder="Teilen Sie Ihre Meinung zu diesem Rezept..." data-recipe="Pasta Carbonara"></textarea>
+                            <button class="comment-submit-btn" data-recipe="Pasta Carbonara">Kommentar senden</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card">
+                    <div class="recipe-card-image">🥗</div>
+                    <div class="recipe-card-content">
+                        <h3>Mediterraner Salat</h3>
+                        <p>Frischer Salat mit Gemüse, Oliven und Feta-Käse.</p>
+                        <a href="#" class="btn">Zum Rezept</a>
+                    </div>
+                    
+                    <div class="recipe-comments">
+                        <div class="reactions">
+                            <button class="reaction-btn" data-recipe="Mediterraner Salat" data-emoji="👍">
+                                👍 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Mediterraner Salat" data-emoji="❤️">
+                                ❤️ <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Mediterraner Salat" data-emoji="😊">
+                                😊 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Mediterraner Salat" data-emoji="😢">
+                                😢 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Mediterraner Salat" data-emoji="😡">
+                                😡 <span class="reaction-count">0</span>
+                            </button>
+                        </div>
+                        
+                        <div class="comments-section" data-recipe="Mediterraner Salat">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                        
+                        <div class="add-comment">
+                            <textarea class="comment-input" placeholder="Teilen Sie Ihre Meinung zu diesem Rezept..." data-recipe="Mediterraner Salat"></textarea>
+                            <button class="comment-submit-btn" data-recipe="Mediterraner Salat">Kommentar senden</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card add-recipe-card add-card--mittag" onclick="openAddRecipeModal('mittag')">
+                    <div class="recipe-card-image">
+                        <div class="add-circle">+</div>
+                    </div>
+                    <div class="recipe-card-content">
+                        <h3>Neues Rezept hinzufügen</h3>
+                        <p>Klicken Sie hier, um ein neues Mittagsrezept zu erstellen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="abend" class="meal-section">
+            <h2 style="text-align: center; color: #3F51B5; margin: 40px 0 30px 0;">🍛 Abendessen</h2>
+            <div class="recipes">
+                <div class="recipe-card">
+                    <div class="recipe-card-image">🍖</div>
+                    <div class="recipe-card-content">
+                        <h3>Gebratenes Hühnchen</h3>
+                        <p>Saftiges Hühnchen mit Knoblauch und Kräutern.</p>
+                        <a href="#" class="btn">Zum Rezept</a>
+                    </div>
+                    
+                    <div class="recipe-comments">
+                        <div class="reactions">
+                            <button class="reaction-btn" data-recipe="Gebratenes Hühnchen" data-emoji="👍">
+                                👍 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Gebratenes Hühnchen" data-emoji="❤️">
+                                ❤️ <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Gebratenes Hühnchen" data-emoji="😊">
+                                😊 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Gebratenes Hühnchen" data-emoji="😢">
+                                😢 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Gebratenes Hühnchen" data-emoji="😡">
+                                😡 <span class="reaction-count">0</span>
+                            </button>
+                        </div>
+                        
+                        <div class="comments-section" data-recipe="Gebratenes Hühnchen">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                        
+                        <div class="add-comment">
+                            <textarea class="comment-input" placeholder="Teilen Sie Ihre Meinung zu diesem Rezept..." data-recipe="Gebratenes Hühnchen"></textarea>
+                            <button class="comment-submit-btn" data-recipe="Gebratenes Hühnchen">Kommentar senden</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card">
+                    <div class="recipe-card-image">🍲</div>
+                    <div class="recipe-card-content">
+                        <h3>Gemüse-Eintopf</h3>
+                        <p>Herzhafter Eintopf mit saisonalem Gemüse und Kartoffeln.</p>
+                        <a href="#" class="btn">Zum Rezept</a>
+                    </div>
+                    
+                    <div class="recipe-comments">
+                        <div class="reactions">
+                            <button class="reaction-btn" data-recipe="Gemüse-Eintopf" data-emoji="👍">
+                                👍 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Gemüse-Eintopf" data-emoji="❤️">
+                                ❤️ <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Gemüse-Eintopf" data-emoji="😊">
+                                😊 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Gemüse-Eintopf" data-emoji="😢">
+                                😢 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Gemüse-Eintopf" data-emoji="😡">
+                                😡 <span class="reaction-count">0</span>
+                            </button>
+                        </div>
+                        
+                        <div class="comments-section" data-recipe="Gemüse-Eintopf">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                        
+                        <div class="add-comment">
+                            <textarea class="comment-input" placeholder="Teilen Sie Ihre Meinung zu diesem Rezept..." data-recipe="Gemüse-Eintopf"></textarea>
+                            <button class="comment-submit-btn" data-recipe="Gemüse-Eintopf">Kommentar senden</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card add-recipe-card add-card--abend" onclick="openAddRecipeModal('abend')">
+                    <div class="recipe-card-image">
+                        <div class="add-circle">+</div>
+                    </div>
+                    <div class="recipe-card-content">
+                        <h3>Neues Rezept hinzufügen</h3>
+                        <p>Klicken Sie hier, um ein neues Abendessensrezept zu erstellen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="snacks" class="meal-section">
+            <h2 style="text-align: center; color: #E91E8C; margin: 40px 0 30px 0;">🍪 Snacks & Süßes</h2>
+            <div class="recipes">
+                <div class="recipe-card">
+                    <div class="recipe-card-image">🍪</div>
+                    <div class="recipe-card-content">
+                        <h3>Chocolate Chip Cookies</h3>
+                        <p>Knusprig außen, saftig innen mit Schokoladenstückchen.</p>
+                        <a href="#" class="btn">Zum Rezept</a>
+                    </div>
+                    
+                    <div class="recipe-comments">
+                        <div class="reactions">
+                            <button class="reaction-btn" data-recipe="Chocolate Chip Cookies" data-emoji="👍">
+                                👍 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Chocolate Chip Cookies" data-emoji="❤️">
+                                ❤️ <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Chocolate Chip Cookies" data-emoji="😊">
+                                😊 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Chocolate Chip Cookies" data-emoji="😢">
+                                😢 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Chocolate Chip Cookies" data-emoji="😡">
+                                😡 <span class="reaction-count">0</span>
+                            </button>
+                        </div>
+                        
+                        <div class="comments-section" data-recipe="Chocolate Chip Cookies">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                        
+                        <div class="add-comment">
+                            <textarea class="comment-input" placeholder="Teilen Sie Ihre Meinung zu diesem Rezept..." data-recipe="Chocolate Chip Cookies"></textarea>
+                            <button class="comment-submit-btn" data-recipe="Chocolate Chip Cookies">Kommentar senden</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card">
+                    <div class="recipe-card-image">🍫</div>
+                    <div class="recipe-card-content">
+                        <h3>Klassische Brownies</h3>
+                        <p>Der Klassiker unter den Brownies - schokoladig und saftig.</p>
+                        <a href="#" class="btn">Zum Rezept</a>
+                    </div>
+                    
+                    <div class="recipe-comments">
+                        <div class="reactions">
+                            <button class="reaction-btn" data-recipe="Klassische Brownies" data-emoji="👍">
+                                👍 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Klassische Brownies" data-emoji="❤️">
+                                ❤️ <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Klassische Brownies" data-emoji="😊">
+                                😊 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Klassische Brownies" data-emoji="😢">
+                                😢 <span class="reaction-count">0</span>
+                            </button>
+                            <button class="reaction-btn" data-recipe="Klassische Brownies" data-emoji="😡">
+                                😡 <span class="reaction-count">0</span>
+                            </button>
+                        </div>
+                        
+                        <div class="comments-section" data-recipe="Klassische Brownies">
+                            <!-- Comments will be loaded here -->
+                        </div>
+                        
+                        <div class="add-comment">
+                            <textarea class="comment-input" placeholder="Teilen Sie Ihre Meinung zu diesem Rezept..." data-recipe="Klassische Brownies"></textarea>
+                            <button class="comment-submit-btn" data-recipe="Klassische Brownies">Kommentar senden</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recipe-card add-recipe-card add-card--snacks" onclick="openAddRecipeModal('snacks')">
+                    <div class="recipe-card-image">
+                        <div class="add-circle">+</div>
+                    </div>
+                    <div class="recipe-card-content">
+                        <h3>Neues Rezept hinzufügen</h3>
+                        <p>Klicken Sie hier, um ein neues Snack- oder Süßrezept zu erstellen.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Meine Rezepte. Alle Rechte vorbehalten.</p>
+        <p>Mit Liebe selbstgemacht 👨‍🍳</p>
+    </footer>
+
+    <!-- Recipe Modal -->
+    <div id="recipeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeRecipeModal()">&times;</span>
+            <h2 id="modalRecipeName">Neues Rezept</h2>
+            
+            <form id="recipeForm">
+                <div class="form-group">
+                    <label for="recipeName">Rezeptname:</label>
+                    <input type="text" id="recipeName" placeholder="z.B. Spaghetti Bolognese" required>
+                </div>
+                <div class="form-group">
+                    <label for="recipePhoto">Foto des Gerichts:</label>
+                    <input type="file" id="recipePhoto" accept="image/*" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="ingredients">Zutaten (eine pro Zeile):</label>
+                    <textarea id="ingredients" placeholder="z.B.&#10;250g Mehl&#10;200ml Milch&#10;2 Eier" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="nutrition">Inhaltsstoffe/Nährwertangaben:</label>
+                    <textarea id="nutrition" placeholder="z.B.&#10;Kalorien: 250 kcal pro Portion&#10;Protein: 8g&#10;Fett: 10g&#10;Kohlenhydrate: 30g"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="preparationTime">Zubereitungszeit (in Minuten):</label>
+                    <input type="number" id="preparationTime" min="1" placeholder="z.B. 30" required>
+                </div>
+
+                <div class="modal-buttons">
+                    <button type="button" class="cancel-btn" onclick="closeRecipeModal()">Abbrechen</button>
+                    <button type="submit" class="save-btn">Rezept speichern</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Open Add Recipe Modal
+        function openAddRecipeModal(category) {
+            const modal = document.getElementById('recipeModal');
+            const modalTitle = document.getElementById('modalRecipeName');
+            
+            // Set category-specific title
+            const categoryNames = {
+                'fruehstueck': 'Neues Frühstücksrezept',
+                'mittag': 'Neues Mittagsrezept',
+                'abend': 'Neues Abendessensrezept',
+                'snacks': 'Neues Snack- oder Süßrezept'
+            };
+            
+            modalTitle.textContent = categoryNames[category] || 'Neues Rezept';
+            
+            // Store category for later use
+            modal.dataset.category = category;
+            
+            modal.style.display = 'block';
+            document.getElementById('recipeForm').reset();
+            
+            // Reset photo type to default (photo)
+            document.querySelector('input[name="photoType"][value="photo"]').checked = true;
+            
+            // Initialize emoji selection
+            initializeEmojiSelection();
+            
+            // Set up photo type radio buttons
+            setupPhotoTypeSelection();
+        }
+
+        // Close Recipe Modal
+        function closeRecipeModal() {
+            const modal = document.getElementById('recipeModal');
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            const modal = document.getElementById('recipeModal');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Handle form submission
+        document.getElementById('recipeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const recipeName = document.getElementById('recipeName').value;
+            const photoFile = document.getElementById('recipePhoto').files[0];
+            const ingredients = document.getElementById('ingredients').value;
+            const nutrition = document.getElementById('nutrition').value;
+            const preparationTime = document.getElementById('preparationTime').value;
+            const category = document.getElementById('recipeModal').dataset.category;
+
+            // Create recipe data object
+            const recipeData = {
+                name: recipeName,
+                photo: photoFile ? photoFile.name : 'Kein Foto',
+                ingredients: ingredients,
+                nutrition: nutrition,
+                preparationTime: preparationTime + ' Minuten',
+                category: category
+            };
+
+            // Save to localStorage
+            let savedRecipes = JSON.parse(localStorage.getItem('recipes')) || {};
+            savedRecipes[recipeName] = recipeData;
+            localStorage.setItem('recipes', JSON.stringify(savedRecipes));
+
+            // Show success message
+            alert('Rezept "' + recipeName + '" erfolgreich gespeichert!');
+            closeRecipeModal();
+        });
+
+        // Add click handlers to all "Zum Rezept" buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const enterSiteBtn = document.getElementById('enterSiteBtn');
+            if (enterSiteBtn) {
+                enterSiteBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.getElementById('landingPage').style.display = 'none';
+                    document.getElementById('siteContent').style.display = 'block';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+
+            const startLink = document.querySelector('a[href="#landing"]');
+            if (startLink) {
+                startLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.getElementById('landingPage').style.display = 'block';
+                    document.getElementById('siteContent').style.display = 'none';
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
+
+            const buttons = document.querySelectorAll('.btn');
+            buttons.forEach(function(button) {
+                if (button.textContent.trim() === 'Zum Rezept') {
+                    button.onclick = function(e) {
+                        e.preventDefault();
+                        const recipeName = this.parentElement.querySelector('h3').textContent;
+                        openRecipeModal(recipeName);
+                    };
+                    button.style.cursor = 'pointer';
+                }
+            });
+
+            // Load saved comments and reactions
+            loadCommentsAndReactions();
+
+            // Add reaction button handlers
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('reaction-btn') || e.target.closest('.reaction-btn')) {
+                    const button = e.target.classList.contains('reaction-btn') ? e.target : e.target.closest('.reaction-btn');
+                    const recipe = button.dataset.recipe;
+                    const emoji = button.dataset.emoji;
+                    
+                    toggleReaction(recipe, emoji, button);
+                }
+            });
+
+            // Add comment submit handlers
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('comment-submit-btn')) {
+                    const recipe = e.target.dataset.recipe;
+                    const textarea = document.querySelector(`.comment-input[data-recipe="${recipe}"]`);
+                    const commentText = textarea.value.trim();
+                    
+                    if (commentText) {
+                        addComment(recipe, commentText);
+                        textarea.value = '';
+                    }
+                }
+            });
+        });
+
+        // Load comments and reactions from localStorage
+        function loadCommentsAndReactions() {
+            const savedData = JSON.parse(localStorage.getItem('recipeComments')) || {};
+            const reactionData = JSON.parse(localStorage.getItem('recipeReactions')) || {};
+
+            // Load comments
+            for (const recipe in savedData) {
+                const commentsSection = document.querySelector(`.comments-section[data-recipe="${recipe}"]`);
+                if (commentsSection) {
+                    commentsSection.innerHTML = '';
+                    savedData[recipe].forEach(comment => {
+                        const commentDiv = document.createElement('div');
+                        commentDiv.className = 'comment';
+                        commentDiv.innerHTML = `
+                            <div class="comment-author">Anonymer User</div>
+                            <div class="comment-text">${comment.text}</div>
+                            <div class="comment-date">${comment.date}</div>
+                        `;
+                        commentsSection.appendChild(commentDiv);
+                    });
+                }
+            }
+
+            // Load reactions
+            for (const recipe in reactionData) {
+                for (const emoji in reactionData[recipe]) {
+                    const count = reactionData[recipe][emoji];
+                    const button = document.querySelector(`.reaction-btn[data-recipe="${recipe}"][data-emoji="${emoji}"]`);
+                    if (button) {
+                        button.querySelector('.reaction-count').textContent = count;
+                    }
+                }
+            }
+        }
+
+        // Toggle reaction (like/dislike)
+        function toggleReaction(recipe, emoji, button) {
+            const reactionData = JSON.parse(localStorage.getItem('recipeReactions')) || {};
+            
+            if (!reactionData[recipe]) reactionData[recipe] = {};
+            if (!reactionData[recipe][emoji]) reactionData[recipe][emoji] = 0;
+            
+            // For simplicity, just increment on each click (no toggle off)
+            reactionData[recipe][emoji]++;
+            
+            localStorage.setItem('recipeReactions', JSON.stringify(reactionData));
+            
+            // Update display
+            button.querySelector('.reaction-count').textContent = reactionData[recipe][emoji];
+            
+            // Add visual feedback
+            button.classList.add('active');
+            setTimeout(() => button.classList.remove('active'), 200);
+        }
+
+        // Add a comment
+        function addComment(recipe, text) {
+            const commentData = JSON.parse(localStorage.getItem('recipeComments')) || {};
+            
+            if (!commentData[recipe]) commentData[recipe] = [];
+            
+            const newComment = {
+                text: text,
+                date: new Date().toLocaleString('de-DE')
+            };
+            
+            commentData[recipe].push(newComment);
+            localStorage.setItem('recipeComments', JSON.stringify(commentData));
+            
+            // Add to display
+            const commentsSection = document.querySelector(`.comments-section[data-recipe="${recipe}"]`);
+            const commentDiv = document.createElement('div');
+            commentDiv.className = 'comment';
+            commentDiv.innerHTML = `
+                <div class="comment-author">Anonymer User</div>
+                <div class="comment-text">${text}</div>
+                <div class="comment-date">${newComment.date}</div>
+            `;
+            commentsSection.appendChild(commentDiv);
+        }
+    </script>
+</body>
+</html>
