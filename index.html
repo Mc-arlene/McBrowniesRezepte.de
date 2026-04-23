@@ -14,10 +14,28 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.1em;
             line-height: 1.6;
             color: #333;
             background-color: #ffe6f2;
+        }
+
+        /* Rezept-Inhalte bleiben in normaler, gut lesbarer Schrift */
+        .recipe-card-content,
+        .recipe-card-content h3,
+        .recipe-card-content p,
+        .recipe-card-content .btn,
+        .comment-input,
+        .comment-text,
+        .comment-author,
+        .comment-date,
+        .form-group input,
+        .form-group textarea,
+        .form-group label,
+        .modal-content p,
+        .reaction-btn {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         header {
@@ -1209,7 +1227,7 @@
         // Load comments and reactions from localStorage
         function loadCommentsAndReactions() {
             const savedData = JSON.parse(localStorage.getItem('recipeComments')) || {};
-            const reactionData = JSON.parse(localStorage.getItem('recipeReactions')) || {};
+            const reactionData = JSON.parse(localStorage.getItem('recipeReactions_v2')) || {};
 
             // Load comments
             for (const recipe in savedData) {
@@ -1229,7 +1247,7 @@
                 }
             }
 
-            const userReactions = JSON.parse(localStorage.getItem('userReactions')) || {};
+            const userReactions = JSON.parse(localStorage.getItem('userReactions_v2')) || {};
 
             // Load reactions
             for (const recipe in reactionData) {
@@ -1248,8 +1266,8 @@
 
         // Toggle reaction: erstes Klicken = hinzufügen, zweites Klicken = rückgängig machen
         function toggleReaction(recipe, emoji, button) {
-            const reactionData = JSON.parse(localStorage.getItem('recipeReactions')) || {};
-            const userReactions = JSON.parse(localStorage.getItem('userReactions')) || {};
+            const reactionData = JSON.parse(localStorage.getItem('recipeReactions_v2')) || {};
+            const userReactions = JSON.parse(localStorage.getItem('userReactions_v2')) || {};
 
             if (!reactionData[recipe]) reactionData[recipe] = {};
             if (!reactionData[recipe][emoji]) reactionData[recipe][emoji] = 0;
@@ -1267,8 +1285,8 @@
                 button.classList.add('active');
             }
 
-            localStorage.setItem('recipeReactions', JSON.stringify(reactionData));
-            localStorage.setItem('userReactions', JSON.stringify(userReactions));
+            localStorage.setItem('recipeReactions_v2', JSON.stringify(reactionData));
+            localStorage.setItem('userReactions_v2', JSON.stringify(userReactions));
 
             button.querySelector('.reaction-count').textContent = reactionData[recipe][emoji];
         }
