@@ -1,12 +1,66 @@
+let cameraStream = null;
+window.capturedCameraPhoto = null;
+
+function startCamera() {
+    window.capturedCameraPhoto = null;
+    const video  = document.getElementById('cameraPreview');
+    const canvas = document.getElementById('cameraCanvas');
+    document.getElementById('openCameraBtn').style.display         = 'none';
+    video.style.display  = 'block';
+    canvas.style.display = 'none';
+    document.getElementById('cameraControls').style.display        = 'flex';
+    document.getElementById('cameraConfirmControls').style.display = 'none';
+    document.getElementById('cameraPhotoConfirmed').style.display  = 'none';
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        document.getElementById('cameraControls').innerHTML = '<p style="color:#c00;font-family:sans-serif;font-size:0.85em;">Kamera wird von diesem Browser nicht unterstützt.</p>';
+        return;
+    }
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } })
+        .then(function(stream) {
+            cameraStream = stream;
+            video.srcObject = stream;
+        })
+        .catch(function() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function(stream) { cameraStream = stream; video.srcObject = stream; })
+                .catch(function(err) {
+                    document.getElementById('cameraControls').innerHTML =
+                        '<p style="color:#c00;font-family:sans-serif;font-size:0.85em;">Kamera konnte nicht geöffnet werden: ' + err.message + '</p>';
+                });
+        });
+}
+
+function stopCamera() {
+    if (cameraStream) {
+        cameraStream.getTracks().forEach(function(t) { t.stop(); });
+        cameraStream = null;
+    }
+}
+
 function updatePhotoSections(type) {
-    document.getElementById('photoUploadSection').style.display  = type === 'photo' ? 'block' : 'none';
-    document.getElementById('emojiPickerSection').style.display  = type === 'emoji' ? 'block' : 'none';
-    document.getElementById('aiSuggestionSection').style.display = type === 'ai'    ? 'block' : 'none';
-    document.getElementById('noImageSection').style.display      = type === 'none'  ? 'block' : 'none';
+    document.getElementById('kameraSection').style.display       = type === 'kamera' ? 'block' : 'none';
+    document.getElementById('photoUploadSection').style.display  = type === 'photo'  ? 'block' : 'none';
+    document.getElementById('emojiPickerSection').style.display  = type === 'emoji'  ? 'block' : 'none';
+    document.getElementById('aiSuggestionSection').style.display = type === 'ai'     ? 'block' : 'none';
+    document.getElementById('noImageSection').style.display      = type === 'none'   ? 'block' : 'none';
+    if (type !== 'kamera') {
+        stopCamera();
+    }
+    if (type === 'kamera') {
+        document.getElementById('openCameraBtn').style.display         = 'inline-block';
+        document.getElementById('cameraPreview').style.display         = 'none';
+        document.getElementById('cameraCanvas').style.display          = 'none';
+        document.getElementById('cameraControls').style.display        = 'none';
+        document.getElementById('cameraConfirmControls').style.display = 'none';
+        document.getElementById('cameraPhotoConfirmed').style.display  = 'none';
+    }
 }
 
 function setupPhotoTypeSelection() {
-    updatePhotoSections('photo');
+    stopCamera();
+    updatePhotoSections('kamera');
+    document.querySelector('input[name="photoType"][value="kamera"]').checked = true;
     document.getElementById('aiImagePreview').innerHTML = '';
     window.aiSuggestedImageUrl = null;
 }
@@ -50,6 +104,7 @@ function openAddRecipeModal(category) {
 
 // Close Recipe Modal
 function closeRecipeModal() {
+    stopCamera();
     const modal = document.getElementById('recipeModal');
     modal.style.display = 'none';
 }
@@ -57,9 +112,73 @@ function closeRecipeModal() {
 // Close modal when clicking outside of it
 window.onclick = function(event) {
     const modal = document.getElementById('recipeModal');
-    if (event.target == modal) {
-        modal.style.display = 'none';
+    const viewModal = document.getElementById('recipeViewModal');
+    if (event.target == modal) modal.style.display = 'none';
+    if (event.target == viewModal) viewModal.style.display = 'none';
+}
+
+function openRecipeModal(recipeName) {
+    const saved = JSON.parse(localStorage.getItem('recipes')) || {};
+    const recipe = saved[recipeName];
+
+    document.getElementById('recipeViewTitle').textContent = recipeName;
+
+    const imageEl = document.getElementById('recipeViewImage');
+    if (recipe && recipe.imageData) {
+        if (recipe.imageType === 'photo' || recipe.imageType === 'kamera') {
+            imageEl.innerHTML = '<img src="' + recipe.imageData + '" alt="' + recipeName + '">';
+        } else {
+            imageEl.textContent = recipe.imageData;
+        }
+    } else {
+        const cardImage = Array.from(document.querySelectorAll('.recipe-card'))
+            .find(function(c) { return (c.querySelector('h3') || {}).textContent === recipeName; });
+        const emoji = cardImage ? (cardImage.querySelector('.recipe-card-image') || {}).textContent : '🍽️';
+        imageEl.textContent = (emoji || '🍽️').trim();
     }
+
+    const body = document.getElementById('recipeViewBody');
+    if (!recipe) {
+        body.innerHTML = '<p class="no-recipe-info">Noch keine Details für dieses Rezept hinterlegt.</p>';
+    } else {
+        let html = '';
+
+        if (recipe.preparationTime) {
+            html += '<div class="recipe-view-meta">⏱ ' + recipe.preparationTime + '</div>';
+        }
+
+        if (recipe.ingredients) {
+            html += '<div class="recipe-view-section"><h3>Zutaten</h3><ul class="ingredients-list">';
+            recipe.ingredients.split('\n').filter(Boolean).forEach(function(line) {
+                html += '<li>' + line + '</li>';
+            });
+            html += '</ul></div>';
+        }
+
+        if (recipe.zubereitung) {
+            html += '<div class="recipe-view-section"><h3>Zubereitung</h3><ol class="prep-steps">';
+            recipe.zubereitung.split('\n').filter(Boolean).forEach(function(step) {
+                html += '<li>' + step.replace(/^\d+\.\s*/, '') + '</li>';
+            });
+            html += '</ol></div>';
+        } else {
+            html += '<div class="recipe-view-section"><h3>Zubereitung</h3><p class="no-recipe-info">Noch keine Zubereitung erfasst.</p></div>';
+        }
+
+        if (recipe.nutrition) {
+            html += '<div class="recipe-view-section"><h3>Nährwerte</h3><p class="nutrition-text">';
+            html += recipe.nutrition.split('\n').filter(Boolean).join('<br>');
+            html += '</p></div>';
+        }
+
+        body.innerHTML = html;
+    }
+
+    document.getElementById('recipeViewModal').style.display = 'block';
+}
+
+function closeRecipeViewModal() {
+    document.getElementById('recipeViewModal').style.display = 'none';
 }
 
 // Handle form submission
@@ -69,6 +188,7 @@ document.getElementById('recipeForm').addEventListener('submit', function(e) {
     const recipeName      = document.getElementById('recipeName').value;
     const ingredients     = document.getElementById('ingredients').value;
     const nutrition       = document.getElementById('nutrition').value;
+    const zubereitung     = document.getElementById('zubereitung').value;
     const preparationTime = document.getElementById('preparationTime').value;
     const category        = document.getElementById('recipeModal').dataset.category;
     const photoType       = document.querySelector('input[name="photoType"]:checked').value;
@@ -80,6 +200,7 @@ document.getElementById('recipeForm').addEventListener('submit', function(e) {
             imageData: imageData,
             ingredients: ingredients,
             nutrition: nutrition,
+            zubereitung: zubereitung,
             preparationTime: preparationTime + ' Minuten',
             category: category
         };
@@ -90,7 +211,10 @@ document.getElementById('recipeForm').addEventListener('submit', function(e) {
         closeRecipeModal();
     }
 
-    if (photoType === 'photo') {
+    if (photoType === 'kamera') {
+        stopCamera();
+        saveRecipe(window.capturedCameraPhoto || null);
+    } else if (photoType === 'photo') {
         const file = document.getElementById('recipePhoto').files[0];
         if (file) {
             const reader = new FileReader();
@@ -157,6 +281,36 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('selectedEmojiPreview').textContent = emoji;
         });
         emojiGrid.appendChild(btn);
+    });
+
+    // Kamera-Buttons
+    document.getElementById('openCameraBtn').addEventListener('click', function() {
+        startCamera();
+    });
+
+    document.getElementById('captureBtn').addEventListener('click', function() {
+        const video  = document.getElementById('cameraPreview');
+        const canvas = document.getElementById('cameraCanvas');
+        canvas.width  = video.videoWidth;
+        canvas.height = video.videoHeight;
+        canvas.getContext('2d').drawImage(video, 0, 0);
+        window.capturedCameraPhoto = canvas.toDataURL('image/jpeg', 0.85);
+        stopCamera();
+        video.style.display  = 'none';
+        canvas.style.display = 'block';
+        document.getElementById('cameraControls').style.display        = 'none';
+        document.getElementById('cameraConfirmControls').style.display = 'flex';
+    });
+
+    document.getElementById('retakeBtn').addEventListener('click', function() {
+        window.capturedCameraPhoto = null;
+        startCamera();
+    });
+
+    document.getElementById('confirmPhotoBtn').addEventListener('click', function() {
+        document.getElementById('cameraConfirmControls').style.display = 'none';
+        document.getElementById('cameraCanvas').style.display          = 'none';
+        document.getElementById('cameraPhotoConfirmed').style.display  = 'block';
     });
 
     // Radio-Buttons für Bildauswahl
@@ -436,6 +590,40 @@ function getEmojiSuggestions(name) {
         }
     });
     return matches.length > 0 ? matches.slice(0, 6) : ['🍽️', '🥘', '🫕', '🍱', '🧆', '🥙'];
+}
+
+function deleteRecipe(recipeName) {
+    if (!confirm('Rezept "' + recipeName + '" wirklich löschen?')) return;
+
+    // Aus localStorage entfernen (selbst hinzugefügte Rezepte)
+    const saved = JSON.parse(localStorage.getItem('recipes')) || {};
+    delete saved[recipeName];
+    localStorage.setItem('recipes', JSON.stringify(saved));
+
+    // In "gelöscht"-Liste speichern (für fest eingebundene Rezepte)
+    const deleted = JSON.parse(localStorage.getItem('deletedRecipes')) || [];
+    if (!deleted.includes(recipeName)) deleted.push(recipeName);
+    localStorage.setItem('deletedRecipes', JSON.stringify(deleted));
+
+    // Karte aus dem DOM entfernen
+    document.querySelectorAll('.recipe-card:not(.add-recipe-card)').forEach(function(card) {
+        const h3 = card.querySelector('h3');
+        if (h3 && h3.textContent.trim() === recipeName) {
+            card.remove();
+        }
+    });
+}
+
+function hideDeletedRecipes() {
+    const deleted = JSON.parse(localStorage.getItem('deletedRecipes')) || [];
+    deleted.forEach(function(recipeName) {
+        document.querySelectorAll('.recipe-card:not(.add-recipe-card)').forEach(function(card) {
+            const h3 = card.querySelector('h3');
+            if (h3 && h3.textContent.trim() === recipeName) {
+                card.remove();
+            }
+        });
+    });
 }
 
 function searchInSavedIngredients(recipeName, query) {
