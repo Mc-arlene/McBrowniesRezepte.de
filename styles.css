@@ -985,45 +985,55 @@ body::before {
     margin: 0;
 }
 
-/* Rezept-Löschen-Button */
-.recipe-delete-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: rgba(255,255,255,0.85);
-    border: none;
-    border-radius: 50%;
-    width: 34px;
-    height: 34px;
-    font-size: 1em;
+/* Löschen im Rezept-Detail-Modal */
+.recipe-view-delete-btn {
+    background: none;
+    border: 2px solid #ddd;
+    color: #aaa;
+    border-radius: 8px;
+    padding: 9px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.9em;
     cursor: pointer;
+    transition: border-color 0.2s, color 0.2s, background-color 0.2s;
+}
+
+.recipe-view-delete-btn:hover {
+    border-color: #E91E8C;
+    color: #E91E8C;
+    background-color: #fff5f7;
+}
+
+.delete-confirm-panel {
+    margin-top: 20px;
+    padding: 16px;
+    background: #fff5f7;
+    border-radius: 10px;
+    border: 1px solid #ffd6ec;
+    text-align: center;
+}
+
+.delete-confirm-panel p {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.95em;
+    color: #555;
+    margin-bottom: 14px;
+}
+
+.delete-confirm-buttons {
     display: flex;
-    align-items: center;
+    gap: 10px;
     justify-content: center;
-    opacity: 0;
-    transition: opacity 0.2s, background-color 0.2s;
-    z-index: 10;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
-.recipe-card {
-    position: relative;
+.delete-yes-btn {
+    background-color: #E91E8C !important;
+    box-shadow: 0 4px 0 #8c0f52, 0 6px 14px rgba(233,30,140,0.25) !important;
 }
 
-.recipe-card:hover .recipe-delete-btn {
-    opacity: 1;
-}
-
-.recipe-delete-btn:hover {
-    background-color: #E91E8C;
-    color: white;
-}
-
-/* Auf Mobilgeräten immer sichtbar (kein Hover) */
-@media (hover: none) {
-    .recipe-delete-btn {
-        opacity: 1;
-    }
+.delete-no-btn {
+    background-color: #888 !important;
+    box-shadow: 0 4px 0 #444, 0 6px 14px rgba(0,0,0,0.15) !important;
 }
 
 /* Camera UI */
