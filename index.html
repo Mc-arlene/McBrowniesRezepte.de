@@ -681,6 +681,65 @@
             box-shadow: 0 4px 20px rgba(233, 30, 140, 0.1);
         }
 
+        /* Suchleiste */
+        .search-bar-section {
+            background-color: #fce4f3;
+            padding: 14px 20px;
+            border-bottom: 1px solid #f0c8e4;
+        }
+
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            padding: 8px 18px;
+            gap: 10px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-wrapper:focus-within {
+            border-color: #E91E8C;
+            box-shadow: 0 0 0 3px rgba(233,30,140,0.12);
+        }
+
+        .search-icon { font-size: 1.1em; }
+
+        .search-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.15em;
+            color: #333;
+            background: transparent;
+        }
+
+        .search-input::placeholder { color: #bbb; }
+
+        .search-clear {
+            background: none;
+            border: none;
+            color: #bbb;
+            cursor: pointer;
+            font-size: 1em;
+            padding: 0 4px;
+            font-family: 'Segoe UI', sans-serif;
+            transition: color 0.2s;
+        }
+
+        .search-clear:hover { color: #E91E8C; }
+
+        .no-search-results {
+            text-align: center;
+            padding: 50px 20px;
+            color: #aaa;
+            font-size: 1.2em;
+        }
+
         /* Foto-Auswahl im Modal */
         .photo-type-options {
             display: flex;
@@ -851,6 +910,14 @@
                 <li><a href="#kontakt">Kontakt</a></li>
             </ul>
         </nav>
+
+        <div class="search-bar-section">
+            <div class="search-wrapper">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="recipeSearch" class="search-input" placeholder="Rezept oder Zutat suchen…">
+                <button id="clearSearch" class="search-clear" style="display:none;">✕</button>
+            </div>
+        </div>
 
         <div class="container">
             <section id="fruehstueck" class="meal-section">
@@ -1480,6 +1547,22 @@
                 img.src = url;
             });
 
+            // Suchfunktion
+            const searchInput = document.getElementById('recipeSearch');
+            const clearBtn    = document.getElementById('clearSearch');
+
+            searchInput.addEventListener('input', function() {
+                const q = this.value.trim().toLowerCase();
+                clearBtn.style.display = q ? 'block' : 'none';
+                filterRecipes(q);
+            });
+
+            clearBtn.addEventListener('click', function() {
+                searchInput.value = '';
+                clearBtn.style.display = 'none';
+                filterRecipes('');
+            });
+
             // Load saved comments and reactions
             loadCommentsAndReactions();
 
@@ -1610,6 +1693,50 @@
             });
             localStorage.setItem('recipeComments', JSON.stringify(commentData));
             renderComments(recipe);
+        }
+
+        // Rezepte nach Suchbegriff filtern
+        function filterRecipes(query) {
+            const sections = document.querySelectorAll('.meal-section');
+            let totalVisible = 0;
+
+            sections.forEach(function(section) {
+                const cards = section.querySelectorAll('.recipe-card:not(.add-recipe-card)');
+                let sectionVisible = 0;
+
+                cards.forEach(function(card) {
+                    const title = (card.querySelector('h3') || {}).textContent || '';
+                    const desc  = (card.querySelector('p')  || {}).textContent || '';
+                    const matches = !query ||
+                        title.toLowerCase().includes(query) ||
+                        desc.toLowerCase().includes(query) ||
+                        searchInSavedIngredients(title.trim(), query);
+
+                    card.style.display = matches ? '' : 'none';
+                    if (matches) sectionVisible++;
+                });
+
+                totalVisible += sectionVisible;
+                const addCard = section.querySelector('.add-recipe-card');
+                if (addCard) addCard.style.display = (query && sectionVisible === 0) ? 'none' : '';
+                section.style.display = (query && sectionVisible === 0) ? 'none' : '';
+            });
+
+            let noResults = document.getElementById('noSearchResults');
+            if (!noResults) {
+                noResults = document.createElement('div');
+                noResults.id = 'noSearchResults';
+                noResults.className = 'no-search-results';
+                noResults.textContent = 'Kein Rezept gefunden.';
+                document.querySelector('#siteContent .container').appendChild(noResults);
+            }
+            noResults.style.display = (query && totalVisible === 0) ? 'block' : 'none';
+        }
+
+        function searchInSavedIngredients(recipeName, query) {
+            const saved = JSON.parse(localStorage.getItem('recipes')) || {};
+            const recipe = saved[recipeName];
+            return recipe && recipe.ingredients && recipe.ingredients.toLowerCase().includes(query);
         }
 
     </script>
