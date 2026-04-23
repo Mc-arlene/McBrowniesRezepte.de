@@ -621,6 +621,105 @@ function getEmojiSuggestions(name) {
     return matches.length > 0 ? matches.slice(0, 6) : ['🍽️', '🥘', '🫕', '🍱', '🧆', '🥙'];
 }
 
+function createRecipeCard(recipeData) {
+    const name   = recipeData.name;
+    const emojis = ['👍', '❤️', '😊', '😢', '😡'];
+
+    const card = document.createElement('div');
+    card.className = 'recipe-card';
+
+    // Bild
+    const imageDiv = document.createElement('div');
+    imageDiv.className = 'recipe-card-image';
+    if ((recipeData.imageType === 'photo' || recipeData.imageType === 'kamera') && recipeData.imageData) {
+        const img = document.createElement('img');
+        img.src = recipeData.imageData;
+        img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+        imageDiv.style.padding = '0';
+        imageDiv.appendChild(img);
+    } else if (recipeData.imageData) {
+        imageDiv.textContent = recipeData.imageData;
+    } else {
+        imageDiv.textContent = '🍽️';
+    }
+
+    // Inhalt
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'recipe-card-content';
+
+    const h3 = document.createElement('h3');
+    h3.textContent = name;
+
+    const p = document.createElement('p');
+    if (recipeData.ingredients) {
+        const lines = recipeData.ingredients.split('\n').filter(Boolean);
+        p.textContent = lines.slice(0, 2).join(', ') + (lines.length > 2 ? ' …' : '');
+    } else {
+        p.textContent = recipeData.preparationTime || '';
+    }
+
+    const btn = document.createElement('a');
+    btn.href = '#';
+    btn.className = 'btn';
+    btn.textContent = 'Zum Rezept';
+    btn.onclick = function(e) { e.preventDefault(); openRecipeModal(name); };
+
+    contentDiv.appendChild(h3);
+    contentDiv.appendChild(p);
+    contentDiv.appendChild(btn);
+
+    // Kommentare & Reaktionen
+    const commentsDiv = document.createElement('div');
+    commentsDiv.className = 'recipe-comments';
+
+    const reactionsDiv = document.createElement('div');
+    reactionsDiv.className = 'reactions';
+    emojis.forEach(function(emoji) {
+        const rb = document.createElement('button');
+        rb.className = 'reaction-btn';
+        rb.dataset.recipe = name;
+        rb.dataset.emoji  = emoji;
+        rb.innerHTML = emoji + ' <span class="reaction-count">0</span>';
+        reactionsDiv.appendChild(rb);
+    });
+
+    const commentsSection = document.createElement('div');
+    commentsSection.className = 'comments-section';
+    commentsSection.dataset.recipe = name;
+
+    const addCommentDiv = document.createElement('div');
+    addCommentDiv.className = 'add-comment';
+    addCommentDiv.innerHTML =
+        '<textarea class="comment-input" placeholder="Teilen Sie Ihre Meinung zu diesem Rezept..." data-recipe="' + name + '"></textarea>' +
+        '<button class="comment-submit-btn" data-recipe="' + name + '">Kommentar senden</button>';
+
+    commentsDiv.appendChild(reactionsDiv);
+    commentsDiv.appendChild(commentsSection);
+    commentsDiv.appendChild(addCommentDiv);
+
+    card.appendChild(imageDiv);
+    card.appendChild(contentDiv);
+    card.appendChild(commentsDiv);
+
+    return card;
+}
+
+function renderSavedRecipeCard(recipeData) {
+    const section = document.getElementById(recipeData.category);
+    if (!section) return;
+    const recipesGrid = section.querySelector('.recipes');
+    const addCard     = recipesGrid.querySelector('.add-recipe-card');
+    const card        = createRecipeCard(recipeData);
+    recipesGrid.insertBefore(card, addCard);
+}
+
+function loadSavedRecipes() {
+    const saved = JSON.parse(localStorage.getItem('recipes')) || {};
+    Object.values(saved).forEach(function(recipe) {
+        renderSavedRecipeCard(recipe);
+    });
+}
+
 function deleteRecipe(recipeName) {
     const saved = JSON.parse(localStorage.getItem('recipes')) || {};
     delete saved[recipeName];
