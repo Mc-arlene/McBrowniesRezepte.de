@@ -420,11 +420,8 @@ document.addEventListener('DOMContentLoaded', function() {
         filterRecipes('');
     });
 
-    // Gespeicherte Rezepte als Karten einblenden
+    // Gespeicherte Rezepte aus Firebase laden (ruft danach loadCommentsAndReactions auf)
     loadSavedRecipes();
-
-    // Load saved comments and reactions
-    loadCommentsAndReactions();
 
     // Add reaction button handlers
     document.addEventListener('click', function(e) {
