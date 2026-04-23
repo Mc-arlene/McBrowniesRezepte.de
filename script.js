@@ -361,6 +361,23 @@ document.addEventListener('DOMContentLoaded', function() {
         preview.appendChild(row);
     });
 
+    // Rezept löschen – Ablauf im Detail-Modal
+    document.getElementById('recipeDeleteBtn').addEventListener('click', function() {
+        document.getElementById('recipeDeleteArea').style.display    = 'none';
+        document.getElementById('recipeDeleteConfirm').style.display = 'block';
+    });
+
+    document.getElementById('confirmDeleteNo').addEventListener('click', function() {
+        document.getElementById('recipeDeleteConfirm').style.display = 'none';
+        document.getElementById('recipeDeleteArea').style.display    = 'block';
+    });
+
+    document.getElementById('confirmDeleteYes').addEventListener('click', function() {
+        const recipeName = document.getElementById('recipeViewTitle').textContent;
+        deleteRecipe(recipeName);
+        closeRecipeViewModal();
+    });
+
     // Suchfunktion
     const searchInput = document.getElementById('recipeSearch');
     const clearBtn    = document.getElementById('clearSearch');
