@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>McBrownies - Köstliche Brownies Rezepte</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -27,9 +29,11 @@
         }
 
         header h1 {
-            font-size: 3.2em;
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.5em;
             margin-bottom: 20px;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.35);
+            letter-spacing: 1px;
         }
 
         header p {
@@ -128,6 +132,17 @@
 
         .btn:hover {
             background-color: #FF69B4;
+        }
+
+        #enterSiteBtn {
+            font-size: 1.15em;
+            padding: 14px 36px;
+            transition: background-color 0.3s, transform 0.2s, box-shadow 0.2s;
+        }
+
+        #enterSiteBtn:hover {
+            transform: scale(1.12);
+            box-shadow: 0 6px 20px rgba(233, 30, 140, 0.4);
         }
 
         /* Meal Section Colors */
@@ -615,7 +630,7 @@
     </style>
     <div id="landingPage" class="landing-page">
         <header>
-            <h1>👨‍🍳 Meine Rezepte</h1>
+            <h1>McBrownies Rezepte</h1>
             <p>Selbstgemachte Rezepte - lecker, einfach, vielfältig</p>
         </header>
 
@@ -1008,8 +1023,8 @@
     </div>
 
     <footer>
-        <p>&copy; 2026 Meine Rezepte. Alle Rechte vorbehalten.</p>
-        <p>Mit Liebe selbstgemacht 👨‍🍳</p>
+        <p>&copy; 2026 McBrownies Rezepte. Alle Rechte vorbehalten.</p>
+        <p>Mit Liebe selbstgemacht</p>
     </footer>
 
     <!-- Recipe Modal -->
@@ -1214,6 +1229,8 @@
                 }
             }
 
+            const userReactions = JSON.parse(localStorage.getItem('userReactions')) || {};
+
             // Load reactions
             for (const recipe in reactionData) {
                 for (const emoji in reactionData[recipe]) {
@@ -1221,29 +1238,39 @@
                     const button = document.querySelector(`.reaction-btn[data-recipe="${recipe}"][data-emoji="${emoji}"]`);
                     if (button) {
                         button.querySelector('.reaction-count').textContent = count;
+                        if (userReactions[recipe] && userReactions[recipe][emoji]) {
+                            button.classList.add('active');
+                        }
                     }
                 }
             }
         }
 
-        // Toggle reaction (like/dislike)
+        // Toggle reaction: erstes Klicken = hinzufügen, zweites Klicken = rückgängig machen
         function toggleReaction(recipe, emoji, button) {
             const reactionData = JSON.parse(localStorage.getItem('recipeReactions')) || {};
-            
+            const userReactions = JSON.parse(localStorage.getItem('userReactions')) || {};
+
             if (!reactionData[recipe]) reactionData[recipe] = {};
             if (!reactionData[recipe][emoji]) reactionData[recipe][emoji] = 0;
-            
-            // For simplicity, just increment on each click (no toggle off)
-            reactionData[recipe][emoji]++;
-            
+            if (!userReactions[recipe]) userReactions[recipe] = {};
+
+            if (userReactions[recipe][emoji]) {
+                // Reaktion rückgängig machen
+                reactionData[recipe][emoji] = Math.max(0, reactionData[recipe][emoji] - 1);
+                userReactions[recipe][emoji] = false;
+                button.classList.remove('active');
+            } else {
+                // Reaktion hinzufügen
+                reactionData[recipe][emoji]++;
+                userReactions[recipe][emoji] = true;
+                button.classList.add('active');
+            }
+
             localStorage.setItem('recipeReactions', JSON.stringify(reactionData));
-            
-            // Update display
+            localStorage.setItem('userReactions', JSON.stringify(userReactions));
+
             button.querySelector('.reaction-count').textContent = reactionData[recipe][emoji];
-            
-            // Add visual feedback
-            button.classList.add('active');
-            setTimeout(() => button.classList.remove('active'), 200);
         }
 
         // Add a comment
