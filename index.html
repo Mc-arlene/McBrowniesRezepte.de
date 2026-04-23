@@ -645,6 +645,83 @@
             transform: translateY(-2px);
             box-shadow: 0 4px 20px rgba(233, 30, 140, 0.1);
         }
+
+        /* ===== 3D DESIGN ===== */
+
+        /* Titel: 3D-Extrusion */
+        header h1 {
+            text-shadow:
+                1px 1px 0 rgba(160,0,70,0.8),
+                2px 2px 0 rgba(140,0,60,0.7),
+                3px 3px 0 rgba(120,0,50,0.5),
+                4px 4px 0 rgba(100,0,40,0.4),
+                5px 5px 0 rgba(80,0,30,0.3),
+                6px 6px 15px rgba(0,0,0,0.35);
+        }
+
+        /* Buttons: physisch drückbar */
+        .btn {
+            box-shadow: 0 7px 0 #8c0f52, 0 10px 22px rgba(233,30,140,0.3);
+            transform: translateY(0);
+            transition: background-color 0.3s, transform 0.1s, box-shadow 0.1s;
+            position: relative;
+        }
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 0 #8c0f52, 0 14px 30px rgba(233,30,140,0.4);
+        }
+        .btn:active {
+            transform: translateY(5px);
+            box-shadow: 0 2px 0 #8c0f52, 0 4px 10px rgba(233,30,140,0.2);
+        }
+
+        /* Hero-Sektion: schwebt mit Perspektive */
+        .hero {
+            box-shadow:
+                0 25px 70px rgba(0,0,0,0.14),
+                0 8px 25px rgba(233,30,140,0.09),
+                0 0 0 1px rgba(255,255,255,0.6) inset;
+            transform: perspective(1200px) rotateX(2.5deg);
+            transform-origin: bottom center;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .hero:hover {
+            transform: perspective(1200px) rotateX(0deg);
+            box-shadow:
+                0 15px 50px rgba(0,0,0,0.1),
+                0 5px 18px rgba(233,30,140,0.06),
+                0 0 0 1px rgba(255,255,255,0.6) inset;
+        }
+
+        /* Rezeptkarten: bereit für JS-Tilt */
+        .recipe-card {
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        /* Abschnittsüberschriften: leichter 3D-Schatten */
+        .meal-section > h2 {
+            text-shadow: 2px 2px 0 rgba(0,0,0,0.07), 5px 5px 10px rgba(0,0,0,0.06);
+        }
+
+        /* Footer: tiefe Schattenkante */
+        footer {
+            box-shadow: 0 -8px 35px rgba(0,0,0,0.28);
+        }
+
+        /* Hintergrund: dezente Tiefenwirkung */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.45) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+        .container, header, footer {
+            position: relative;
+            z-index: 1;
+        }
     </style>
     <div id="landingPage" class="landing-page">
         <header>
@@ -1316,6 +1393,31 @@
             `;
             commentsSection.appendChild(commentDiv);
         }
+
+        // ===== 3D KARTEN-TILT =====
+        // Karten kippen interaktiv mit der Mausposition
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.recipe-card:not(.add-recipe-card)').forEach(function(card) {
+                card.addEventListener('mouseenter', function() {
+                    card.style.transition = 'none';
+                });
+                card.addEventListener('mousemove', function(e) {
+                    const r = card.getBoundingClientRect();
+                    const x = e.clientX - r.left;
+                    const y = e.clientY - r.top;
+                    const rx = ((y - r.height / 2) / r.height) * -22;
+                    const ry = ((x - r.width  / 2) / r.width)  *  22;
+                    card.style.transform = `perspective(800px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-12px) scale(1.04)`;
+                    card.style.boxShadow = `${-ry * 1.8}px ${Math.abs(rx) + 18}px 50px rgba(0,0,0,0.22)`;
+                });
+                card.addEventListener('mouseleave', function() {
+                    card.style.transition = 'transform 0.55s ease, box-shadow 0.55s ease';
+                    card.style.transform = '';
+                    card.style.boxShadow = '';
+                    setTimeout(function() { card.style.transition = ''; }, 560);
+                });
+            });
+        });
     </script>
 </body>
 </html>
