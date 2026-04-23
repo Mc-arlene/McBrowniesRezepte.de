@@ -236,9 +236,15 @@ document.getElementById('recipeForm').addEventListener('submit', function(e) {
             preparationTime: preparationTime + ' Minuten',
             category: category
         };
-        let savedRecipes = JSON.parse(localStorage.getItem('recipes')) || {};
-        savedRecipes[recipeName] = recipeData;
-        localStorage.setItem('recipes', JSON.stringify(savedRecipes));
+        const key = toFirebaseKey(recipeName);
+        db.ref('recipes/' + key).set(recipeData)
+            .catch(function() {
+                // Fallback: localStorage
+                const local = JSON.parse(localStorage.getItem('recipes')) || {};
+                local[recipeName] = recipeData;
+                localStorage.setItem('recipes', JSON.stringify(local));
+            });
+        window.recipesCache[recipeName] = recipeData;
         renderSavedRecipeCard(recipeData);
         loadCommentsAndReactions();
         closeRecipeModal();
