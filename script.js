@@ -763,8 +763,7 @@ function deleteRecipe(recipeName) {
 }
 
 function searchInSavedIngredients(recipeName, query) {
-    const saved = JSON.parse(localStorage.getItem('recipes')) || {};
-    const recipe = saved[recipeName];
+    const recipe = window.recipesCache[recipeName];
     return recipe && recipe.ingredients && recipe.ingredients.toLowerCase().includes(query);
 }
 
