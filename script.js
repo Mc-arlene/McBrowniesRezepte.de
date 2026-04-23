@@ -138,8 +138,7 @@ window.onclick = function(event) {
 }
 
 function openRecipeModal(recipeName) {
-    const saved = JSON.parse(localStorage.getItem('recipes')) || {};
-    const recipe = saved[recipeName];
+    const recipe = window.recipesCache[recipeName];
 
     document.getElementById('recipeViewTitle').textContent = recipeName;
 
